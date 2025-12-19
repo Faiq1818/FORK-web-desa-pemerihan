@@ -14,6 +14,8 @@ BEGIN
 END
 $$;
 
+ALTER USER migration_user CREATEDB;
+
 \c pemerihan_db
 
 GRANT CONNECT ON DATABASE pemerihan_db TO migration_user;
