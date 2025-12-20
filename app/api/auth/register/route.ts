@@ -4,7 +4,7 @@ import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
 
 // zod type validation
-const Player = z.object({
+const fromRequest = z.object({
   username: z.string().min(5),
   password: z.string().min(5),
 });
@@ -22,7 +22,7 @@ export async function POST(req: Request) {
   }
 
   // zod validation
-  const result = Player.safeParse(body);
+  const result = fromRequest.safeParse(body);
   if (!result.success) {
     return Response.json({
       message: z.treeifyError(result.error),
@@ -35,7 +35,7 @@ export async function POST(req: Request) {
 
   // push new user with hashed password to db and its (overkill imo) error handling
   try {
-    const users = await prisma.user.create({
+    await prisma.user.create({
       data: { name: result.data.username, password: hash },
     });
   } catch (err) {
@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 
         default:
           return Response.json(
-            { error: "Database error", code: err.code },
+            { error: "Database error", err, code: err.code },
             { status: 500 },
           );
       }
@@ -57,6 +57,6 @@ export async function POST(req: Request) {
   }
 
   return Response.json({
-    result,
+    message: "User Berhasil Dibuat",
   });
 }
