@@ -20,3 +20,14 @@ model User {
   name      String?  @unique
   password  String?
 }
+
+model Article {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  title     String
+  slug      String   @unique
+  content   String   @db.Text
+  featuredImageUrl  String   @map("featured_image_url")
+  ImageFirst        String?  @map("image_first_url")
+  ImageSecond       String?  @map("image_second_url")
+}
