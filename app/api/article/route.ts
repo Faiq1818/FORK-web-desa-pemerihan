@@ -1,9 +1,9 @@
 import prisma from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
-import jwt, { JwtPayload } from "jsonwebtoken";
-import { AUTH_CONFIG } from "@/libs/JWTConfig";
+import { JwtPayload } from "jsonwebtoken";
 import { validateBody } from "@/libs/requestHelper";
+import { validateAuthHelper } from "@/libs/authHelper";
 
 const Article = z.object({
   title: z.string().min(5),
@@ -31,42 +31,17 @@ export async function POST(req: Request) {
     );
   }
 
-  // get bearer authorization from headers and validate and split to get the token only, maybe we need to make an helper on this
-  const authHeader = req.headers.get("authorization");
-  let token;
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    console.error("Token tidak valid atau tidak ditemukan");
+  // validate the jwt token
+  const decodedUser = await validateAuthHelper(req.headers.get("authorization"));
+  if (!decodedUser.success) {
     return Response.json(
-      { message: "Token tidak valid atau tidak ditemukan" },
-      { status: 401 },
+      { error: decodedUser.error },
+      { status: decodedUser.error.status },
     );
-  } else {
-    token = authHeader.split(" ")[1];
-    console.log(token);
-  }
-
-  // verifying the jwt, we need to make the helper ngl
-  let decodedUser;
-  try {
-    decodedUser = jwt.verify(token, AUTH_CONFIG.JWT_SECRET);
-  } catch (err) {
-    if (err instanceof jwt.TokenExpiredError) {
-      return Response.json(
-        { message: "Token sudah kadaluwarsa" },
-        { status: 401 },
-      );
-    } else if (err instanceof jwt.JsonWebTokenError) {
-      return Response.json({ message: "Token tidak valid" }, { status: 401 });
-    } else {
-      return Response.json(
-        { message: "Internal Server Error saat Auth" },
-        { status: 500 },
-      );
-    }
   }
 
   // get the payload from jwt
-  const payload = decodedUser as MyJwtPayload;
+  const payload = decodedUser.data as MyJwtPayload;
 
   // checking if the user are in the db
   try {
