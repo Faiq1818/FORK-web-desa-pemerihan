@@ -3,7 +3,7 @@ import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
 import { JwtPayload } from "jsonwebtoken";
 import { validateBody } from "@/libs/requestHelper";
-import { validateAuthHelper } from "@/libs/authHelper";
+import { validateJwtAuthHelper } from "@/libs/authHelper";
 
 const Article = z.object({
   title: z.string().min(5),
@@ -32,16 +32,16 @@ export async function POST(req: Request) {
   }
 
   // validate the jwt token
-  const decodedUser = await validateAuthHelper(req.headers.get("authorization"));
-  if (!decodedUser.success) {
+  const decodedJwt = await validateJwtAuthHelper(req.headers.get("authorization"));
+  if (!decodedJwt.success) {
     return Response.json(
-      { error: decodedUser.error },
-      { status: decodedUser.error.status },
+      { error: decodedJwt.error },
+      { status: decodedJwt.error.status },
     );
   }
 
   // get the payload from jwt
-  const payload = decodedUser.data as MyJwtPayload;
+  const payload = decodedJwt.data as MyJwtPayload;
 
   // checking if the user are in the db
   try {

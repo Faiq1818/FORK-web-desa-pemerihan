@@ -12,7 +12,7 @@ type ValidationResult =
   | { success: true; data: string | JwtPayload }
   | { success: false; error: ValidationError };
 
-export async function validateAuthHelper(
+export async function validateJwtAuthHelper(
   authHeader: string | null
 ): Promise<ValidationResult> {
   let token: string;
@@ -65,6 +65,7 @@ export async function validateAuthHelper(
       }
     }
   }
+  console.log(decodedUser)
 
   return {
     success: true,
