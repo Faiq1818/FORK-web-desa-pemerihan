@@ -13,6 +13,7 @@ const Article = z.object({
   additionalImages: z.array(z.string().min(5)),
 });
 
+// interface/type for jwt payload (typescript things lol, they are so strict about type)
 interface MyJwtPayload extends JwtPayload {
   data: {
     userId: number;
@@ -32,7 +33,7 @@ export async function POST(req: Request) {
 
   // get bearer authorization from headers and validate and split to get the token only, maybe we need to make an helper on this
   const authHeader = req.headers.get("authorization");
-  let token
+  let token;
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     console.error("Token tidak valid atau tidak ditemukan");
     return Response.json(
@@ -41,20 +42,26 @@ export async function POST(req: Request) {
     );
   } else {
     token = authHeader.split(" ")[1];
-    console.log(token)
+    console.log(token);
   }
 
   // verifying the jwt, we need to make the helper ngl
-  let decodedUser
+  let decodedUser;
   try {
     decodedUser = jwt.verify(token, AUTH_CONFIG.JWT_SECRET);
   } catch (err) {
     if (err instanceof jwt.TokenExpiredError) {
-      return Response.json({ message: "Token sudah kadaluwarsa" }, { status: 401 });
+      return Response.json(
+        { message: "Token sudah kadaluwarsa" },
+        { status: 401 },
+      );
     } else if (err instanceof jwt.JsonWebTokenError) {
       return Response.json({ message: "Token tidak valid" }, { status: 401 });
     } else {
-      return Response.json({ message: "Internal Server Error saat Auth" }, { status: 500 });
+      return Response.json(
+        { message: "Internal Server Error saat Auth" },
+        { status: 500 },
+      );
     }
   }
 
@@ -72,15 +79,9 @@ export async function POST(req: Request) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       switch (err.code) {
         case "P2025":
-          return Response.json(
-            { error: "User tidak valid" },
-            { status: 404 },
-          );
+          return Response.json({ error: "User tidak valid" }, { status: 404 });
         default:
-          return Response.json(
-            { error: "Database error" },
-            { status: 500 },
-          );
+          return Response.json({ error: "Database error" }, { status: 500 });
       }
     }
   }
@@ -96,19 +97,13 @@ export async function POST(req: Request) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       switch (err.code) {
         case "P2025":
-          return Response.json(
-            { error: "User tidak valid" },
-            { status: 404 },
-          );
+          return Response.json({ error: "User tidak valid" }, { status: 404 });
         default:
-          return Response.json(
-            { error: "Database error" },
-            { status: 500 },
-          );
+          return Response.json({ error: "Database error" }, { status: 500 });
       }
     }
   }
-  
+
   // check if slug is already exist and throw error
   const checkSlugExist = await prisma.article.findUnique({
     where: {
@@ -116,18 +111,41 @@ export async function POST(req: Request) {
     },
   });
   if (checkSlugExist) {
-    return Response.json(
-      { error: "Slug sudah ada" },
-      { status: 409 },
-    );
+    return Response.json({ error: "Slug sudah ada" }, { status: 409 });
   }
 
+  // push new article to db
+  try {
+    await prisma.article.create({
+      data: {
+        title: result.data.title,
+        slug: result.data.slug,
+        content: result.data.content,
+        featuredImageUrl: result.data.featuredImageUrl,
+        additionalImages: result.data.additionalImages,
+      },
+    });
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (err.code) {
+        case "P2002": // unique constraint
+          return Response.json(
+            { error: "Username already exists" },
+            { status: 409 },
+          );
 
+        default:
+          return Response.json(
+            { error: "Database error", err, code: err.code },
+            { status: 500 },
+          );
+      }
+    }
+  }
 
+  // finally send success response
   return Response.json(
-    {
-      message: "Login berhasil",
-    },
+    { message: "Article berhasil diupload" },
     { status: 200 },
   );
 }

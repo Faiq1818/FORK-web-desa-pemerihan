@@ -15,6 +15,8 @@
 - Buat db local menggunakan compose
 - Jika menggunakan podman ubah command docker menjadi podman (example: docker compose up -d menjadi podman compose up -d)
 
+## Diharuskan melakukan formatting "npm run format" setiap kali ingin melakukan pull request.
+
 ### 1. Buat container postgres
 
 ```sh
