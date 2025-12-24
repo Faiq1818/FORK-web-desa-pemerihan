@@ -7,7 +7,7 @@ import { validateJwtAuthHelper } from "@/libs/authHelper";
 
 const Article = z.object({
   title: z.string().min(5),
-  slug: z.string().min(5),
+  // slug: z.string().min(5),
   content: z.string().min(5),
   featuredImageUrl: z.string().min(5),
   additionalImages: z.array(z.string().min(5)),
@@ -19,6 +19,16 @@ interface MyJwtPayload extends JwtPayload {
     userId: number;
     username: string;
   };
+}
+
+const generateSlug = (text: string) => {
+  return text
+    .toString()
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g, '-')     // Ganti spasi dengan -
+    .replace(/[^\w\-]+/g, '') // Hapus karakter non-word
+    .replace(/\-\-+/g, '-');  // Ganti multiple - dengan single -
 }
 
 export async function POST(req: Request) {
@@ -81,10 +91,13 @@ export async function POST(req: Request) {
     }
   }
 
+  // generate slug from title
+  let finalSlug = generateSlug(result.data.title);
+
   // check if slug is already exist and throw error
   const checkSlugExist = await prisma.article.findUnique({
     where: {
-      slug: result.data.slug,
+      slug: finalSlug,
     },
   });
   if (checkSlugExist) {
@@ -96,7 +109,7 @@ export async function POST(req: Request) {
     await prisma.article.create({
       data: {
         title: result.data.title,
-        slug: result.data.slug,
+        slug: finalSlug,
         content: result.data.content,
         featuredImageUrl: result.data.featuredImageUrl,
         additionalImages: result.data.additionalImages,

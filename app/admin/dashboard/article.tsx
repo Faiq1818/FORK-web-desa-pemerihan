@@ -14,7 +14,7 @@ export default function ArticleDashboard() {
             <div
               className="border rounded-2xl py-1 px-2 bg-[#CFEAFF] text-[#008AFC] cursor-pointer hover:bg-[#8CCCFF]"
             >
-              Tambah Article
+              <p>Tambah Artikel</p>
             </div>
           </Link>
         </div>
