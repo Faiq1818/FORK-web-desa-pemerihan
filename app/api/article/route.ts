@@ -152,6 +152,8 @@ export async function POST(req: Request) {
 }
 
 export async function GET(req: Request) {
+  let articleList;
+  let dataCount = 0;
   const { searchParams } = new URL(req.url);
   const queryParams = {
     page: searchParams.get("page"),
@@ -165,4 +167,56 @@ export async function GET(req: Request) {
     );
   }
   const { page, limit } = result.data;
+  const skip = (page - 1) * limit;
+
+  try {
+    [articleList, dataCount] = await prisma.$transaction([
+      prisma.article.findMany({
+        skip: skip,
+        take: limit,
+        orderBy: {
+          createdAt: "desc",
+        },
+      }),
+      prisma.article.count(),
+    ]);
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (err.code) {
+        default:
+          return Response.json(
+            { error: "Database error", err, code: err.code },
+            { status: 500 },
+          );
+      }
+    }
+  }
+
+  const totalPages = Math.ceil(dataCount / limit);
+
+  if (page > totalPages && dataCount > 0) {
+    return Response.json(
+      {
+        error: "Halaman tidak ditemukan",
+        message: `Hanya tersedia ${totalPages} halaman.`,
+        meta: {
+          page,
+          totalPages,
+        },
+      },
+      { status: 404 },
+    );
+  }
+
+  return Response.json({
+    data: articleList,
+    meta: {
+      page,
+      limit,
+      totalItems: dataCount,
+      totalPages,
+      hasNextPage: page < totalPages, // untuk mempermudah frontend nanti
+      hasPrevPage: page > 1, // misal ada tombol next/pref page gitu bisa pakai boolean dari sini
+    },
+  });
 }
