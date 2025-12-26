@@ -19,8 +19,8 @@
         devShells.default = pkgs.mkShell {
           packages = with pkgs; [
             nodejs_24
-            prisma
-            prisma-engines
+            prisma_7
+            prisma-engines_7
             openssl
           ];
           shellHook = ''
