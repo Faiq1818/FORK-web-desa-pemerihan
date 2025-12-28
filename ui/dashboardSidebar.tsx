@@ -1,33 +1,37 @@
-import { MdArticle } from "react-icons/md";
-import { FaShop } from "react-icons/fa6";
-import { MdSwitchAccount } from "react-icons/md";
 import Link from "next/link";
+import { MdArticle, MdSwitchAccount } from "react-icons/md";
+import { FaShop } from "react-icons/fa6";
 
-export default function Page() {
+export default function DashboardSidebar() {
   return (
-    <div className="bg-slate-700 px-4 text-white text-xl">
-      <div className="mt-5 font-bold text-2xl">Dashboard</div>
-      <Link
-        href={"/admin/dashboard/article"}
-        className="mt-5 cursor-pointer flex items-center gap-2"
-      >
-        <MdArticle />
-        <span>Artikel</span>
-      </Link>
-      <Link
-        href={"/admin/dashboard/shop"}
-        className="mt-5 cursor-pointer flex items-center gap-2"
-      >
-        <FaShop />
-        <span>Toko</span>
-      </Link>
-      <Link
-        href={"/admin/dashboard/accounts"}
-        className="mt-5 cursor-pointer flex items-center gap-2"
-      >
-        <MdSwitchAccount />
-        <span>Akun</span>
-      </Link>
-    </div>
+    <aside className="bg-slate-700 text-white flex flex-col gap-2 p-4 w-full md:w-64 md:min-h-dvh shrink-0 transition-all">
+      <div className="my-4 font-bold text-2xl">Dashboard</div>
+      
+      <nav className="flex flex-col gap-4">
+        <Link
+          href={"/admin/dashboard/article"}
+          className="flex items-center gap-3 px-2 py-2 hover:bg-slate-600 rounded-md transition-colors"
+        >
+          <MdArticle size={20} />
+          <span>Artikel</span>
+        </Link>
+        
+        <Link
+          href={"/admin/dashboard/shop"}
+          className="flex items-center gap-3 px-2 py-2 hover:bg-slate-600 rounded-md transition-colors"
+        >
+          <FaShop size={18} />
+          <span>Toko</span>
+        </Link>
+        
+        <Link
+          href={"/admin/dashboard/accounts"}
+          className="flex items-center gap-3 px-2 py-2 hover:bg-slate-600 rounded-md transition-colors"
+        >
+          <MdSwitchAccount size={20} />
+          <span>Akun</span>
+        </Link>
+      </nav>
+    </aside>
   );
 }
