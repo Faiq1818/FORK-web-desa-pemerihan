@@ -9,11 +9,9 @@ export default function Page() {
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<File | null>(null);
 
-  const handleUpload = () => {
+  const handleUpload = () => {};
 
-  }
-
-  console.log(title)
+  console.log(title);
 
   return (
     <>
@@ -38,7 +36,6 @@ export default function Page() {
             onChange={(e) => setPrice(Number(e.target.value))}
           />
         </div>
-
 
         {/* Input gambar */}
         <div className="flex items-center gap-5 mb-5">
@@ -85,7 +82,6 @@ export default function Page() {
           />
         </div>
 
-
         {/* Tombol kirim */}
         <div className="my-5 flex justify-end">
           <div
@@ -98,7 +94,6 @@ export default function Page() {
             </div>
           </div>
         </div>
-
       </div>
     </>
   );
