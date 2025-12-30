@@ -1,5 +1,5 @@
 import prisma from "@/libs/prisma";
-import { getPresignedDownloadUrl } from "@/libs/minioAction";
+import { getPresignedDownloadUrl } from "@/libs/awsS3Action";
 import { Prisma } from "@/generated/prisma/client";
 
 type ArticleResult = [Prisma.ArticleGetPayload<{}> | null, string | null];

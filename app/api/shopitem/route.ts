@@ -4,6 +4,7 @@ import * as z from "zod";
 import { JwtPayload } from "jsonwebtoken";
 import prisma from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
+import { generateSlug } from "@/libs/generateSlugHelper";
 
 const ShopItem = z.object({
   name: z.string(),
@@ -20,16 +21,6 @@ interface MyJwtPayload extends JwtPayload {
     username: string;
   };
 }
-
-const generateSlug = (text: string) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-") // Ganti spasi dengan -
-    .replace(/[^\w\-]+/g, "") // Hapus karakter non-word
-    .replace(/\-\-+/g, "-"); // Ganti multiple - dengan single -
-};
 
 export async function POST(req: Request) {
   // validate body
@@ -56,30 +47,26 @@ export async function POST(req: Request) {
   const payload = decodedJwt.data as MyJwtPayload;
 
   // checking if the user are in the db
-  try {
-    await prisma.user.findFirstOrThrow({
-      where: {
-        name: payload.data.username,
-      },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        case "P2025":
-          return Response.json({ error: "User tidak valid" }, { status: 404 });
-        default:
-          return Response.json({ error: "Database error" }, { status: 500 });
-      }
-    }
+  const userExists = await prisma.user.findUnique({
+    where: { id: payload.data.userId },
+  });
+
+  if (!userExists) {
+    return Response.json(
+      { error: "User tidak valid / tidak ditemukan" },
+      { status: 404 },
+    );
   }
 
-  // push new article to db
+  // push new item to db
   try {
-    await prisma.article.create({
+    await prisma.shopItems.create({
       data: {
-        title: result.data.title,
-        slug: finalSlug,
-        content: result.data.content,
+        name: result.data.name,
+        slug: "",
+        price: result.data.price,
+        contact: result.data.contact,
+        description: result.data.description,
         featuredImageUrl: result.data.featuredImageUrl,
         //additionalImages: result.data.additionalImages,
       },
@@ -102,4 +89,6 @@ export async function POST(req: Request) {
     }
   }
 
+  // finally send success response
+  return Response.json({ message: "Item berhasil diupload" }, { status: 200 });
 }

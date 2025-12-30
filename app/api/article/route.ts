@@ -4,7 +4,7 @@ import * as z from "zod";
 import { JwtPayload } from "jsonwebtoken";
 import { validateBody } from "@/libs/requestHelper";
 import { validateJwtAuthHelper } from "@/libs/authHelper";
-import { minioClient, minioConf } from "@/libs/minio";
+import { generateSlug } from "@/libs/generateSlugHelper";
 
 const Article = z.object({
   title: z.string().min(5),
@@ -18,23 +18,12 @@ const listPagingSchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(10),
 });
 
-// interface/type for jwt payload (typescript things lol, they are so strict about type)
 interface MyJwtPayload extends JwtPayload {
   data: {
     userId: number;
     username: string;
   };
 }
-
-const generateSlug = (text: string) => {
-  return text
-    .toString()
-    .toLowerCase()
-    .trim()
-    .replace(/\s+/g, "-") // Ganti spasi dengan -
-    .replace(/[^\w\-]+/g, "") // Hapus karakter non-word
-    .replace(/\-\-+/g, "-"); // Ganti multiple - dengan single -
-};
 
 export async function POST(req: Request) {
   // validate body
@@ -61,53 +50,25 @@ export async function POST(req: Request) {
   const payload = decodedJwt.data as MyJwtPayload;
 
   // checking if the user are in the db
-  try {
-    await prisma.user.findFirstOrThrow({
-      where: {
-        name: payload.data.username,
-      },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        case "P2025":
-          return Response.json({ error: "User tidak valid" }, { status: 404 });
-        default:
-          return Response.json({ error: "Database error" }, { status: 500 });
-      }
-    }
-  }
+  const userExists = await prisma.user.findUnique({
+    where: { id: payload.data.userId },
+  });
 
-  // checking if the user are in the db
-  //
-  //
-  //
-  // looks like this is sort of stupidity, but i'm to tired to think about this so i'll keep it up
-  try {
-    await prisma.user.findUniqueOrThrow({
-      where: {
-        name: payload.data.username,
-      },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        case "P2025":
-          return Response.json({ error: "User tidak valid" }, { status: 404 });
-        default:
-          return Response.json({ error: "Database error" }, { status: 500 });
-      }
-    }
-  }
-
-  try {
-    await minioClient.statObject(
-      minioConf.BUCKET_NAME,
-      result.data.featuredImageUrl,
+  if (!userExists) {
+    return Response.json(
+      { error: "User tidak valid / tidak ditemukan" },
+      { status: 404 },
     );
-  } catch (err) {
-    return { success: false, error: "File tidak ditemukan di storage server." };
   }
+
+  // try {
+  //   await minioClient.statObject(
+  //     minioConf.BUCKET_NAME,
+  //     result.data.featuredImageUrl,
+  //   );
+  // } catch (err) {
+  //   return { success: false, error: "File tidak ditemukan di storage server." };
+  // }
 
   // generate slug from title
   let finalSlug = generateSlug(result.data.title);
@@ -138,7 +99,7 @@ export async function POST(req: Request) {
       switch (err.code) {
         case "P2002": // unique constraint
           return Response.json(
-            { error: "Username already exists" },
+            { error: "Slug already exists" },
             { status: 409 },
           );
 
