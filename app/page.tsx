@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from 'react';
+import { useState } from "react";
 import Link from "next/link";
 import { CiMail } from "react-icons/ci";
 import { BsFillTelephoneFill, BsMailbox } from "react-icons/bs";
@@ -220,19 +220,45 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="flex md:hidden justify-center items-center h-[100%] w-[15%] cursor-pointer" onClick={() => setIsSidebarOpen(true)}>
+        <div
+          className="flex md:hidden justify-center items-center h-[100%] w-[15%] cursor-pointer"
+          onClick={() => setIsSidebarOpen(true)}
+        >
           <IoMenu className="h-[30%] w-auto" />
         </div>
 
         {/* Sidebar */}
-        <div className={`sidebar fixed right-0 top-0 h-screen w-[60vw] bg-[#747175] z-50 transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : 'translate-x-full'}`}>
-          <button onClick={() => setIsSidebarOpen(false)} className="absolute top-4 right-4 text-white text-2xl">
-            ×
-          </button>
-          Sidebar content
+        <div
+          className={`flex flex-col sidebar fixed right-0 top-0 h-screen w-[75vw] bg-[#FFF8DE] z-50 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
+        >
+          <div className="flex flex-row bg-[#3B060A] items-center border-1 gap-3 p-3 h-[10%] w-[100%]">
+            <div className="flex justify-center items-center h-[100%] aspect-square bg-yellow-500 rounded-full">
+              <FaMountainSun className="h-[50%] w-auto" />
+            </div>
+            <div className="font-semibold text-white text-[#452829] text-[clamp(20px,1.3vh,30px)]">
+              Desa Pemerihan
+            </div>
+          </div>
+          <div className="flex flex-col p-3">
+            {["Beranda", "Tentang", "Pejabat", "UMKM", "Artikel", "Lokasi"].map(
+              (item) => (
+                <div
+                  key={item}
+                  className="flex font-semibold items-center p-3 w-[100%] h-auto text-[clamp(18px,2vh,25px)] hover:bg-[#FBE580]"
+                >
+                  {item}
+                </div>
+              ),
+            )}
+          </div>
         </div>
 
-        {isSidebarOpen && (<div className="fixed inset-0 bg-black/50 z-40" onClick={() => setIsSidebarOpen(false)}/>)}
+        {isSidebarOpen && (
+          <div
+            className="fixed inset-0 bg-black/50 z-40"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
       </div>
       <div className="flex flex-row justify-center items-center landscape:h-[90vh] portrait:w-[100vw] portrait:aspect-[2/1.25]">
         Image
@@ -584,7 +610,9 @@ export default function Home() {
         </div>
         <div className="flex justify-center items-center h-[15%] sm:h-[15%] w-[100%]">
           <div className="flex justify-center items-center bg-[#AA2B1D] gap-3 rounded-xl h-[55%] w-[55%] sm:w-[25%]">
-            <div className="text-white text-[clamp(12px,1.1vw,15px)]">Lihat Semua Artikel</div>
+            <div className="text-white text-[clamp(12px,1.1vw,15px)]">
+              Lihat Semua Artikel
+            </div>
             <FaArrowRight className="text-white" />
           </div>
         </div>
