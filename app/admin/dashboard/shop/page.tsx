@@ -30,8 +30,6 @@ export default function Page() {
       const data = await res.json();
       console.log(data);
       setShopItem(data.data);
-
-      localStorage.setItem("auth", data.token);
     } catch (err) {
       console.error(err);
     }
