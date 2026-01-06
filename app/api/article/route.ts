@@ -25,6 +25,9 @@ interface MyJwtPayload extends JwtPayload {
   };
 }
 
+//////////
+// POST //
+//////////
 export async function POST(req: Request) {
   // validate body
   const result = await validateBody(req, Article);
@@ -41,7 +44,7 @@ export async function POST(req: Request) {
   );
   if (!decodedJwt.success) {
     return Response.json(
-      { error: decodedJwt.error },
+      { error: decodedJwt.error, success: decodedJwt.success },
       { status: decodedJwt.error.status },
     );
   }
@@ -119,7 +122,21 @@ export async function POST(req: Request) {
   );
 }
 
+/////////
+// GET //
+/////////
 export async function GET(req: Request) {
+  // validate the jwt token
+  const decodedJwt = await validateJwtAuthHelper(
+    req.headers.get("authorization"),
+  );
+  if (!decodedJwt.success) {
+    return Response.json(
+      { error: decodedJwt.error, success: decodedJwt.success },
+      { status: decodedJwt.error.status },
+    );
+  }
+
   let articleList;
   let dataCount = 0;
   const { searchParams } = new URL(req.url);
@@ -177,6 +194,7 @@ export async function GET(req: Request) {
   }
 
   return Response.json({
+    success: true,
     data: articleList,
     meta: {
       page,

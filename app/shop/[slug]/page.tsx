@@ -29,9 +29,7 @@ export default async function Page({
           )}
         </div>
         <div>
-          <h1 className="font-bold text-2xl mb-2 ">
-            {shopItem.name}
-          </h1>
+          <h1 className="font-bold text-2xl mb-2 ">{shopItem.name}</h1>
           <p className="font-bold text-3xl">Rp. {shopItem.price}</p>
           <p className="font-bold text-xl mt-2">Contact</p>
           <p className="font-bold text-xl">{shopItem.contact}</p>

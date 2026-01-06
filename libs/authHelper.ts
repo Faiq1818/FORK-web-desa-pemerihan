@@ -65,7 +65,6 @@ export async function validateJwtAuthHelper(
       };
     }
   }
-  console.log(decodedUser);
 
   return {
     success: true,

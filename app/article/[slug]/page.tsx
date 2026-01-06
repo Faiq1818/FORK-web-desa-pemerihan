@@ -18,7 +18,7 @@ export default async function Page({
     );
   }
 
-  console.log(article.content)
+  console.log(article.content);
 
   return (
     <>
@@ -33,7 +33,10 @@ export default async function Page({
             <div>gk ada gambar</div>
           )}
           {/* ini merender content artikel dari db sebagai html, rentan xss, jadi hati-hati*/}
-          <div className="prose prose-neutral break-words whitespace-normal max-w-none" dangerouslySetInnerHTML={{ __html: article?.content ?? "" }} />
+          <div
+            className="prose prose-neutral break-words whitespace-normal max-w-none"
+            dangerouslySetInnerHTML={{ __html: article?.content ?? "" }}
+          />
         </div>
       </div>
     </>

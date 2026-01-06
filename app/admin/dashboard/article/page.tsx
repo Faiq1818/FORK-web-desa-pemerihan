@@ -7,12 +7,15 @@ import { CiTrash } from "react-icons/ci";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { timeFormatter } from "@/libs/timeFormatterToID";
 import { RiExpandDiagonalLine } from "react-icons/ri";
+import { useRouter } from "next/navigation";
 
 export default function ArticleDashboard() {
   const [articles, setArticles] = useState<any>([]);
+  const router = useRouter();
 
   useEffect(() => {
     const getArticleData = async () => {
+      const token = localStorage.getItem("auth");
       try {
         const res = await fetch(
           "http://localhost:3000/api/article?page=1&limit=10",
@@ -20,19 +23,25 @@ export default function ArticleDashboard() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
             },
           },
         );
 
+        const data = await res.json();
+
+        // if success != true, fallback user to login page
+        if (!data.success) {
+          router.push("/auth/login");
+          return;
+        }
+
+        // error handling
         if (!res.ok) {
           throw new Error("Request failed");
         }
 
-        const data = await res.json();
-        console.log(data);
         setArticles(data.data);
-
-        localStorage.setItem("auth", data.token);
       } catch (err) {
         console.error(err);
       }
