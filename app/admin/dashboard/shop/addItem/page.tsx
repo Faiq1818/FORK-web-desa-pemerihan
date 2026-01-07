@@ -2,13 +2,15 @@
 import { useState } from "react";
 import { IoSend } from "react-icons/io5";
 import { getPresignedUploadUrl } from "@/libs/awsS3Action";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [contact, setContact] = useState("");
   const [description, setDescription] = useState("");
-  const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File[]>([]);
 
   const handleAddArticle = async (objectName: string) => {
     try {
@@ -35,19 +37,21 @@ export default function Page() {
       }
 
       alert("Berhasil terkirim");
+      router.push("/admin/dashboard/shop");
     } catch (err) {
       alert("Gagal terkirim");
       console.error(err);
     }
   };
+  console.log(file.length)
 
   const handleUpload = async () => {
-    if (!file) return;
+    if (file.length == 0) return;
 
     try {
       const { success, url, objectName, error } = await getPresignedUploadUrl(
-        file.name,
-        file.type,
+        file[0].name,
+        file[0].type,
       );
 
       if (!success || !url || !objectName) {
@@ -57,9 +61,9 @@ export default function Page() {
       // upload to minio (Direct from Browser)
       const uploadRes = await fetch(url, {
         method: "PUT",
-        body: file,
+        body: file[0],
         headers: {
-          "Content-Type": file.type,
+          "Content-Type": file[0].type,
         },
       });
 
@@ -116,7 +120,10 @@ export default function Page() {
             type="file"
             accept="image/*"
             onChange={(e) => {
-              setFile(e.target.files?.[0] || null);
+              const selectedFile = e.target.files?.[0];
+              if (selectedFile) {
+                setFile([selectedFile]);
+              }
             }}
             className="text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
@@ -139,7 +146,7 @@ export default function Page() {
             onClick={handleUpload}
           >
             <div className="flex items-center gap-2">
-              <p>Kirim Artikel</p>
+              <p>Kirim Barang</p>
               <IoSend />
             </div>
           </div>
