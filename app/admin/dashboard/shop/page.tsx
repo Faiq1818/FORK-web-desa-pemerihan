@@ -88,14 +88,12 @@ export default function Page() {
                 >
                   <RiExpandDiagonalLine />
                 </Link>
-                {
-                  <Link
-                    href={`/admin/dashboard/shop/edititem/${item.id}`}
-                    className="px-3 py-1 text-xl text-[#1e66f5] hover:bg-blue-50 rounded border border-transparent"
-                  >
-                    <MdOutlineModeEdit />
-                  </Link>
-                }
+                <Link
+                  href={`/admin/dashboard/shop/edititem/${item.id}`}
+                  className="px-3 py-1 text-xl text-[#1e66f5] hover:bg-blue-50 rounded border border-transparent"
+                >
+                  <MdOutlineModeEdit />
+                </Link>
                 <button className="px-3 py-1 text-xl text-[#e64553] hover:bg-red-50 rounded">
                   <CiTrash />
                 </button>
