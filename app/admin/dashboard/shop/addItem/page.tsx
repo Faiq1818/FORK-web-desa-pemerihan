@@ -12,7 +12,7 @@ export default function Page() {
   const [contact, setContact] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState<(File | null)[]>([null, null, null, null, null]);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
   const howMuchImages = [0, 1, 2, 3, 4]
 
   const handleAddArticle = async (objectName: string) => {
@@ -80,8 +80,8 @@ export default function Page() {
   };
 
   // custom trigger biar minjem fungsi dari <input/> di button custom
-  const handleCustomClick = () => {
-    fileInputRef.current?.click();
+  const handleCustomClick = (index: number) => {
+    fileInputRef.current[index]?.click();
   };
   console.log(file)
 
@@ -130,11 +130,18 @@ export default function Page() {
                 <input
                   type="file"
                   accept="image/*"
-                  ref={fileInputRef}
+                  ref={(el) => {
+                    fileInputRef.current[i] = el;
+                  }}
                   onChange={(e) => {
                     const selectedFile = e.target.files?.[0];
                     if (selectedFile) {
-                      setFile([]);
+                      // 4. LOGIC MENGUBAH ARRAY PADA INDEX TERTENTU
+                      setFile((prev) => {
+                        const newFiles = [...prev]; // Copy array lama
+                        newFiles[i] = selectedFile; // Ubah index ke-i
+                        return newFiles; // Simpan array baru
+                      });
                     }
                   }}
                   className="hidden"
@@ -148,7 +155,7 @@ export default function Page() {
                     className="flex items-center justify-center text-sm text-slate-400
               bg-slate-50 w-30 h-30 rounded-2xl border border-slate-200 cursor-pointer
               mb-5 flex-col hover:bg-slate-100 transition"
-                    onClick={handleCustomClick}
+                    onClick={() => handleCustomClick(i)}
                   >
                     <LuImagePlus className="text-2xl mb-2" />
                     <span>Tambah</span>
@@ -157,7 +164,7 @@ export default function Page() {
               ) : (
                 <img
                   src={URL.createObjectURL(file[i]!)}
-                  onClick={handleCustomClick}
+                  onClick={() => handleCustomClick(i)}
                   className="flex items-center justify-center text-sm text-slate-400
             bg-slate-50 w-30 h-30 rounded-2xl border border-slate-200 cursor-pointer
             mb-5 flex-col hover:bg-slate-100 transition"
