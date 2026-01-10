@@ -1,756 +1,483 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import { useState } from "react";
-import Link from "next/link";
-import { CiMail } from "react-icons/ci";
-import { BsFillTelephoneFill, BsMailbox } from "react-icons/bs";
-import { PiSealCheckFill } from "react-icons/pi";
-import { FaStar } from "react-icons/fa";
-import { FaStarHalfAlt } from "react-icons/fa";
-import { FaRegStar } from "react-icons/fa";
-import { FaShoppingCart } from "react-icons/fa";
-import { FaLocationDot } from "react-icons/fa6";
-import { FaClock } from "react-icons/fa6";
-import { FaArrowRight } from "react-icons/fa6";
-import { FaMountainSun } from "react-icons/fa6";
-import { FaCalendarCheck } from "react-icons/fa";
-import { FaFacebookF } from "react-icons/fa6";
-import { FaInstagram } from "react-icons/fa6";
-import { FaYoutube } from "react-icons/fa6";
-import { IoMdMail } from "react-icons/io";
-import { IoMenu } from "react-icons/io5";
-import { MdOpenInNew } from "react-icons/md";
+import { useState } from 'react';
+import { MapPin, Phone, Mail, Users, Home, Building2 } from 'lucide-react';
+import ContactModal from '@/components/shared/ContactModal';
 
-type Pejabat = {
-  nama: string;
-  jabatan: string;
-  image: string;
-};
+export default function HomePage() {
+  const [selectedContact, setSelectedContact] = useState<number | null>(null);
 
-type Produk = {
-  nama: string;
-  long_desc: string;
-  short_desc: string;
-  advantage: string[];
-  star: number;
-  review: number;
-  price: number;
-  disc: number;
-};
+  // Officials Data
+  const officials = [
+    {
+      name: 'Bapak Surya Wijaya',
+      role: 'Kepala Desa',
+      image: 'https://placehold.co/200x200/2D5A27/white?text=Kepala+Desa',
+      phone: '+62 812-3456-7890',
+      email: 'kepala.desa@pemerihan.id'
+    },
+    {
+      name: 'Bapak Ahmad Faozi',
+      role: 'Sekretaris Desa',
+      image: 'https://placehold.co/200x200/2D5A27/white?text=Sekretaris',
+      phone: '+62 813-4567-8901',
+      email: 'sekretaris@pemerihan.id'
+    },
+    {
+      name: 'Ibu Siti Nurhaliza',
+      role: 'Bendahara',
+      image: 'https://placehold.co/200x200/2D5A27/white?text=Bendahara',
+      phone: '+62 814-5678-9012',
+      email: 'bendahara@pemerihan.id'
+    },
+    {
+      name: 'Bapak Bambang Santoso',
+      role: 'Kasi Pemerintahan',
+      image: 'https://placehold.co/200x200/2D5A27/white?text=Kasi',
+      phone: '+62 815-6789-0123',
+      email: 'kasi@pemerihan.id'
+    },
+  ];
 
-type News = {
-  news_type: string;
-  date: string;
-  title: string;
-  desc: string;
-};
+  // Featured Products
+  const featuredProducts = [
+    {
+      name: 'Batik Tulis Sejahtera',
+      price: 'Rp 350.000',
+      image: 'https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&auto=format&fit=crop',
+      badge: 'Produk Unggulan'
+    },
+    {
+      name: 'Rajut Arshika Lokal',
+      price: 'Rp 75.000',
+      image: 'https://plus.unsplash.com/premium_photo-1661683887049-69e8ae0a6c92?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+      badge: 'Best Seller'
+    },
+    {
+      name: 'Keripikan Bambu',
+      price: 'Rp 25.000',
+      image: 'https://images.unsplash.com/photo-1599490659213-e2b9527bd087?w=400&auto=format&fit=crop',
+      badge: 'Terlaris'
+    },
+  ];
 
-const formatTanggal = (date: string) => {
-  return new Intl.DateTimeFormat("id-ID", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(new Date(date));
-};
+  // News/Articles
+  const newsArticles = [
+    {
+      title: 'Pelatihan Pembuatan Batik untuk Ibu-Ibu PKK Desa Sejahtera',
+      date: '12 Desember 2024',
+      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop',
+      category: 'UMKM',
+      excerpt: 'Program pemberdayaan masyarakat melalui pelatihan batik...'
+    },
+    {
+      title: 'Workshop Urban Farming di Sawah Desa',
+      date: '10 Desember 2024',
+      image: 'https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=400&auto=format&fit=crop',
+      category: 'Pertanian',
+      excerpt: 'Pelatihan bertani modern untuk meningkatkan hasil panen...'
+    },
+    {
+      title: 'Festival Kuliner dan Promosi UMKM Lokal',
+      date: '8 Desember 2024',
+      image: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&auto=format&fit=crop',
+      category: 'Event',
+      excerpt: 'Promosi produk lokal dalam festival kuliner desa...'
+    },
+  ];
 
-const data: Pejabat[] = [
-  { nama: "Bapak Surya Wijaya", jabatan: "Kepala Desa", image: "" },
-  { nama: "Bapak Ahmad Fauzi", jabatan: "Sekretaris Desa", image: "" },
-  { nama: "Ibu Siti Nurhaliza", jabatan: "Kaur Keuangan", image: "" },
-  { nama: "Bapak Bambang Susilo", jabatan: "Kepala Dusun", image: "" },
-  { nama: "Bapak Bambang Susilo", jabatan: "Kepala Dusun", image: "" },
-  { nama: "Bapak Bambang Susilo", jabatan: "Kepala Dusun", image: "" },
-  { nama: "Bapak Bambang Susilo", jabatan: "Kepala Dusun", image: "" },
-];
-
-const produkData: Produk[] = [
-  {
-    nama: "Serum Wajah Glow",
-    long_desc:
-      "Serum wajah dengan kandungan niacinamide dan hyaluronic acid untuk membantu mencerahkan kulit, menjaga kelembapan, serta membuat kulit tampak lebih sehat dan bercahaya.",
-    short_desc: "Serum pencerah dan pelembap wajah.",
-    advantage: [
-      "Mencerahkan kulit",
-      "Melembapkan intensif",
-      "Tekstur ringan",
-      "Cepat menyerap",
-    ],
-    star: 5,
-    review: 124,
-    price: 120000,
-    disc: 20,
-  },
-  {
-    nama: "Facial Wash Gentle",
-    long_desc:
-      "Sabun cuci wajah dengan formula lembut yang membantu membersihkan kotoran tanpa membuat kulit kering atau terasa tertarik.",
-    short_desc: "Pembersih wajah lembut untuk semua jenis kulit.",
-    advantage: [
-      "Tidak membuat kulit kering",
-      "Cocok untuk kulit sensitif",
-      "pH seimbang",
-    ],
-    star: 4,
-    review: 87,
-    price: 45000,
-    disc: 10,
-  },
-  {
-    nama: "Moisturizer Aloe",
-    long_desc:
-      "Krim pelembap berbahan dasar aloe vera untuk membantu menenangkan kulit, mengurangi kemerahan, dan menjaga hidrasi sepanjang hari.",
-    short_desc: "Pelembap aloe untuk kulit sensitif.",
-    advantage: ["Menenangkan kulit", "Cepat meresap", "Tidak lengket"],
-    star: 4,
-    review: 65,
-    price: 75000,
-    disc: 15,
-  },
-  {
-    nama: "Sunscreen SPF 50",
-    long_desc:
-      "Tabir surya dengan perlindungan SPF 50 PA++++ untuk melindungi kulit dari sinar UVA dan UVB serta mencegah penuaan dini.",
-    short_desc: "Perlindungan maksimal dari sinar matahari.",
-    advantage: [
-      "SPF tinggi",
-      "Ringan di kulit",
-      "Tidak meninggalkan white cast",
-    ],
-    star: 5,
-    review: 210,
-    price: 90000,
-    disc: 25,
-  },
-  {
-    nama: "Toner Hydrating",
-    long_desc:
-      "Toner dengan kandungan hyaluronic acid untuk membantu menghidrasi kulit dan mempersiapkan kulit sebelum tahap skincare berikutnya.",
-    short_desc: "Toner hidrasi untuk semua jenis kulit.",
-    advantage: ["Melembapkan", "Menyegarkan kulit", "Bebas alkohol"],
-    star: 4,
-    review: 92,
-    price: 60000,
-    disc: 0,
-  },
-];
-
-const newsData: News[] = [
-  {
-    news_type: "Pengumuman",
-    date: "2025-01-05",
-    title: "Pembagian Bantuan Sosial Tahap I",
-    desc: "Pemerintah desa akan melaksanakan pembagian bantuan sosial tahap pertama kepada warga yang terdaftar sebagai penerima manfaat.",
-  },
-  {
-    news_type: "Kegiatan",
-    date: "2025-01-12",
-    title: "Gotong Royong Bersih Desa",
-    desc: "Seluruh warga diimbau untuk berpartisipasi dalam kegiatan gotong royong membersihkan lingkungan desa.",
-  },
-  {
-    news_type: "Berita",
-    date: "2025-01-20",
-    title: "Peresmian Balai Desa Baru",
-    desc: "Balai desa baru resmi digunakan sebagai pusat pelayanan masyarakat dan kegiatan pemerintahan desa.",
-  },
-  {
-    news_type: "Pengumuman",
-    date: "2025-02-01",
-    title: "Pendaftaran Bantuan UMKM",
-    desc: "Pendaftaran bantuan UMKM dibuka bagi pelaku usaha desa untuk mendorong pertumbuhan ekonomi lokal.",
-  },
-  {
-    news_type: "Kegiatan",
-    date: "2025-02-10",
-    title: "Pelatihan Digitalisasi UMKM",
-    desc: "Pelatihan digitalisasi UMKM akan diselenggarakan untuk meningkatkan kemampuan pemasaran online pelaku usaha desa.",
-  },
-];
-
-export default function Home() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   return (
-    <div>
-      {/*////// development bar to navigating to admin dashboard, just for development, we'll remove it on production */}
-      <div className="bg-[#333446] flex justify-end py-5 px-10 text-[#EAEFEF]">
-        <div className="flex">
-          <Link prefetch={false} href="/admin/dashboard">
-            <span className="flex items-center gap-2 rounded-2xl py-2 px-4 bg-[#F0F0F0] text-[#333446] font-bold cursor-pointer hover:bg-[#ACADAD] text-sm transition-colors">
-              <MdOpenInNew className="text-xl" />
-              <p>Masuk ke Dashboard</p>
-            </span>
-          </Link>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section 
+        className="relative h-[500px] md:h-[600px] bg-cover bg-center"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url(/images/Hero.webp)'
+        }}
+      >
+        <div className="relative h-full flex flex-col items-center justify-center text-white px-4">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center">
+            Selamat Datang di<br />
+            <span className="text-yellow-400">Desa Pemerihan</span>
+          </h1>
+          <p className="text-lg md:text-xl mb-8 text-center max-w-2xl">
+            Kecamatan Bengkunat, Pesisir Barat, Lampung - Indonesia
+          </p>
+          <a 
+            href="#about" 
+            className="bg-yellow-400 text-gray-900 font-semibold px-8 py-3 rounded-full hover:bg-yellow-500 transition"
+          >
+            Jelajahi Desa →
+          </a>
         </div>
-      </div>
-      {/*////// development bar to navigating to admin dashboard, just for development, we'll remove it on production */}
+      </section>
 
-      <div className="flex flex-row justify-between bg-[#FFFDE1] h-[10vh] w-[100vw] text-[clamp(12px,1.2vw,15px)]">
-        {/* Logo */}
-        <div className="flex items-center w-[50%] landscape:w-[32%] h-[100%] portrait:md:w-[42%]">
-          <div className="flex ml-[20%] portrait:ml-[10%] w-[100%] md:w-[80%] h-[100%] gap-[3%]">
-            <div className="flex justify-center items-center w-auto h-[100%]">
-              <div className="flex justify-center items-center h-[50%] md:h-[70%] aspect-square bg-yellow-500 rounded-full">
-                <FaMountainSun className="h-[50%] w-auto" />
-              </div>
-            </div>
-            <div className="flex flex-col w-[70%] h-full">
-              <div className="flex items-end h-1/2 portrait:text-[clamp(10px,1.1vh,15px)] portrait:md:text-[clamp(15px,2vh,20px)]">
-                <b>Desa Sejahtera</b>
-              </div>
-              <div className="h-1/2 portrait:text-[clamp(10px,1.1vh,15px)] portrait:md:text-[clamp(15px,2vh,20px)]">
-                Kabupaten Makmur
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Menu */}
-        <div className="hidden md:flex flex-row justify-center items-center w-[44%]">
-          <div className="flex flex-row justify-center items-center gap-[2%] h-[100%] w-[100%]">
-            {["Beranda", "Tentang", "Pejabat", "UMKM", "Artikel", "Lokasi"].map(
-              (item) => (
-                <div
-                  key={item}
-                  className="flex justify-center items-center w-auto h-[100%] portrait:text-[clamp(15px,1.3vh,18px)]"
-                >
-                  {item}
-                </div>
-              ),
-            )}
-          </div>
-        </div>
-        <div
-          className="flex md:hidden justify-center items-center h-[100%] w-[15%] cursor-pointer"
-          onClick={() => setIsSidebarOpen(true)}
-        >
-          <IoMenu className="h-[30%] w-auto" />
-        </div>
-
-        {/* Sidebar */}
-        <div
-          className={`flex flex-col sidebar fixed right-0 top-0 h-screen w-[75vw] bg-[#FFF8DE] z-50 transition-transform duration-300 ${isSidebarOpen ? "translate-x-0" : "translate-x-full"}`}
-        >
-          <div className="flex flex-row bg-[#3B060A] items-center border-1 gap-3 p-3 h-[10%] w-[100%]">
-            <div className="flex justify-center items-center h-[100%] aspect-square bg-yellow-500 rounded-full">
-              <FaMountainSun className="h-[50%] w-auto" />
-            </div>
-            <div className="font-semibold text-white text-[#452829] text-[clamp(20px,1.3vh,30px)]">
+      {/* Desa Pemerihan Section */}
+      <section id="about" className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Title with underline */}
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
               Desa Pemerihan
-            </div>
+            </h2>
+            <div className="w-24 h-1 bg-yellow-400 mx-auto"></div>
           </div>
-          <div className="flex flex-col p-3">
-            {["Beranda", "Tentang", "Pejabat", "UMKM", "Artikel", "Lokasi"].map(
-              (item) => (
-                <div
-                  key={item}
-                  className="flex font-semibold items-center p-3 w-[100%] h-auto text-[clamp(18px,2vh,25px)] hover:bg-[#FBE580]"
-                >
-                  {item}
-                </div>
-              ),
-            )}
-          </div>
-        </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-12">
+            {/* Left Column - Text Content */}
+            <div className="space-y-8">
+              {/* Visi Desa */}
+              <div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">Visi Desa</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Mewujudkan Desa Sejahtera sebagai desa yang mandiri, sejahtera, dan berkelanjutan 
+                  dengan memanfaatkan potensi alam dan sumber daya manusia yang berkualitas untuk 
+                  kesejahteraan bersama.
+                </p>
+              </div>
 
-        {isSidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black/50 z-40"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-      </div>
-      <div className="flex flex-row justify-center items-center landscape:h-[90vh] portrait:w-[100vw] portrait:aspect-[2/1.25]">
-        Image
-      </div>
-      <div className="flex flex-col gap-[2%] bg-[#F5F2F2] landscape:h-[100vh] portrait:w-[100vw] portrait:aspect-[2/2.5] portrait:sm:aspect-[2/1.15] text-[clamp(12px,1.2vw,15px)]">
-        <div className="flex flex-col border-red-500 h-[20%] w-[100%] portrait:h-[15%]">
-          <div className="flex h-[45%] w-[100%]"></div>
-          <div className="flex justify-center items-center h-auto w-[100%] text-[#452829] text-[clamp(12px,2vw,40px)] portrait:text-[clamp(12px,2vh,40px)]">
-            <b>Selayang Pandang</b>
-          </div>
-          <div className="flex justify-center border-black h-[15%] w-[100%] mt-[0.5%]">
-            <div className="flex bg-[#E9B63B] h-[15%] w-[7%] rounded-[5px]"></div>
-          </div>
-        </div>
-        <div className="flex flex-row justify-center items-start border-red-500 border-[1px] h-[100%] sm:h-[80%] w-[100%]">
-          <div className="flex flex-col sm:flex-row justify-center items-center border-blue-500 h-[90%] w-[90%]">
-            <div className="flex flex-col justify-center items-center border-black-500 border-[1px] h-[50%] sm:h-[100%] w-[100%] sm:w-[50%]">
-              <div className="flex flex-col border-red-500 border-[1px] h-[100%] w-[100%]">
-                <div className="flex h-[20%] w-[100%] text-[#452829] text-[clamp(12px,1.2vw,20px)]">
-                  <b>Visi Desa</b>
-                </div>
-                <div className="flex h-[80%] w-[100%]">Blabla</div>
+              {/* Sejarah Singkat */}
+              <div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-4">Sejarah Singkat</h3>
+                <p className="text-gray-600 leading-relaxed">
+                  Desa Sejahtera didirikan pada tahun 1945 dan telah berkembang menjadi salah satu 
+                  desa percontohan di wilayah Kabupaten Makmur. Dengan luas wilayah 1.250 hektar, 
+                  desa ini dihuni oleh 3.500 jiwa yang mayoritas bermata pencaharian sebagai petani 
+                  dan pengrajin.
+                </p>
               </div>
-              <div className="flex flex-col border-red-500 border-[1px] h-[100%] w-[100%]">
-                <div className="flex h-[20%] w-[100%] text-[#452829] text-[clamp(12px,1.2vw,20px)]">
-                  <b>Visi Desa</b>
+
+              {/* Statistics */}
+              <div className="grid grid-cols-3 gap-6 pt-4">
+                <div className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold text-amber-700 mb-1">3,500</div>
+                  <div className="text-sm text-gray-600">Penduduk</div>
                 </div>
-                <div className="flex h-[80%] w-[100%]">Blabla</div>
+                <div className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold text-amber-700 mb-1">1,250</div>
+                  <div className="text-sm text-gray-600">Hektar</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-4xl md:text-5xl font-bold text-amber-700 mb-1">45+</div>
+                  <div className="text-sm text-gray-600">UMKM</div>
+                </div>
               </div>
-              <div className="flex flex-row border-red-500 border-[1px] h-[100%] w-[100%]"></div>
             </div>
-            <div className="relative flex-row border-red-500 border-[1px] h-[50%] sm:h-[100%] w-[100%] sm:w-[50%]">
-              <div className="absolute top-0 right-0 w-[95%] h-[95%] border-blue-500 border-[5px]"></div>
-              <div className="absolute bottom-[0%] left-[0%] w-[30%] h-[15%] border-green-500 border-[5px]"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col landscape:h-[80vh] portrait:w-[100%] portrait:aspect-[2/2.5] portrait:md:aspect-[2/1]">
-        <div className="flex flex-col items-center h-[30%] w-[100%]">
-          <div className="flex justify-center items-end h-[65%] w-[100%] text-[#452829] text-[clamp(12px,2vw,40px)] portrait:text-[clamp(12px,2vh,40px)]">
-            <b>Pejabat dan Pengurus Desa</b>
-          </div>
-          <div className="flex bg-[#E9B63B] h-[2%] w-[8%] rounded-[5px] mt-[1%]"></div>
-          <div className="flex justify-center items-center h-[33%] w-[100%] p-[5%] sm:p-0 text-center portrait:text-[clamp(12px,1.3vh,18px)]">
-            Tim kepemimpinan desa yang berdedikasi untuk melayani dan memajukan
-            kesejahteraan masyarakat
-          </div>
-        </div>
-        <div className="flex justify-center items-center h-[70%]">
-          <div className="flex flex-col sm:flex-row items-center gap-[2%] overflow-x-auto snap-x snap-mandatory px-4 scrollbar-hide w-[80%] h-[70%]">
-            <div className="flex sm:hidden start-snap"></div>
-            {data.map((item, i) => (
-              <div
-                key={i}
-                className="flex justify-center items-center flex-shrink-0 landscape:lg:w-[23.7%] w-[70%] portrait:lg:w-[32.5%] md:w-[32.5%] sm:w-[50%] h-[90%]"
-              >
-                <div className="flex flex-col gap-[1%] justify-center items-center rounded-xl shadow-[0_3px_16px_rgba(0,0,0,0.12)] p-3 text-center h-[100%] w-full">
-                  <div className="flex justify-center items-center w-[40%] aspect-square rounded-full border-2 border-yellow-400">
-                    Image
-                  </div>
-                  <div className="font-semibold text-[#452829] text-[clamp(12px,1.2vw,30px)]">
-                    {item.nama}
-                  </div>
-                  <div className="text-sm text-gray-500">{item.jabatan}</div>
-                  <div className="flex justify-center items-center gap-3 h-[20%] w-[40%]">
-                    <div className="flex bg-[#57595B] justify-center items-center rounded-full w-[50%] aspect-square">
-                      <div className="flex w-[50%] h-[50%]">
-                        <CiMail className="h-[100%] w-[100%]" />
-                      </div>
+
+            {/* Right Column - Image */}
+            <div className="relative">
+              <div className="relative rounded-2xl overflow-hidden shadow-2xl">
+                <img 
+                  src="https://plus.unsplash.com/premium_photo-1688472616515-6d7dce94a5ab?w=800&auto=format&fit=crop"
+                  alt="Rumah Adat Desa Pemerihan"
+                  className="w-full h-auto object-cover"
+                />
+                {/* Badge Overlay */}
+                <div className="absolute bottom-6 left-6 right-6">
+                  <div className="bg-yellow-400 rounded-xl p-4 shadow-lg flex items-center gap-3">
+                    <div className="w-10 h-10 bg-amber-700 rounded-full flex items-center justify-center flex-shrink-0">
+                      <span className="text-2xl">🏆</span>
                     </div>
-                    <div className="flex bg-[#57595B] justify-center items-center rounded-full w-[50%] aspect-square">
-                      <div className="flex w-[50%] h-[50%]">
-                        <BsFillTelephoneFill className="h-[100%] w-[100%]" />
-                      </div>
+                    <div>
+                      <div className="font-bold text-gray-900 text-sm md:text-base">Desa Terbaik 2023</div>
+                      <div className="text-xs text-gray-700">Kabupaten Makmur</div>
                     </div>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Video Desa */}
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
+            Video Profil Desa Pemerihan 
+          </h2>
+          <p className="text-center text-gray-600 mb-12">
+            Saksikan keindahan dan kehidupan masyarakat Desa Pemerihan dalam video eksklusif ini
+          </p>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="rounded-2xl overflow-hidden shadow-xl border-4 border-amber-600">
+              <div className="relative w-full bg-black" style={{ paddingBottom: '56.25%' }}>
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full"
+                  src="https://www.youtube.com/embed/wB8AArJG6BE"
+                  title="Video Desa Pemerihan"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Produk Unggulan Desa */}
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Title */}
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
+              Produk Unggulan Desa
+            </h2>
+            <p className="text-gray-600 text-base md:text-lg max-w-2xl mx-auto">
+              Produk berkualitas dari UMKM lokal yang dikerjakan dengan penuh dedikasi oleh masyarakat desa
+            </p>
+          </div>
+
+          {/* Featured Product 1 - Madu Apikalis */}
+          <div className="bg-gradient-to-br from-amber-50 to-orange-50 rounded-3xl shadow-2xl overflow-hidden mb-12">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0">
+              {/* Left - Product Image */}
+              <div className="relative h-[450px] lg:h-auto">
+                <img 
+                  src="/images/Madu.webp"
+                  alt="Madu Apikalis"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+
+              {/* Right - Product Details */}
+              <div className="p-8 lg:p-10 flex flex-col justify-center bg-white">
+                <div className="inline-flex items-center gap-2 mb-6 self-start bg-amber-100 px-4 py-2 rounded-full">
+                  <span className="text-amber-700">⭐</span>
+                  <span className="text-sm font-bold text-amber-800 uppercase">Produk Unggulan</span>
+                </div>
+                
+                <h3 className="text-3xl lg:text-4xl font-bold text-gray-800 mb-4">
+                  Madu Apikalis
+                </h3>
+                
+                <p className="text-gray-600 mb-6 leading-relaxed">
+                  Madu murni berkualitas premium yang dihasilkan dari lebah lokal di hutan desa kami. Dipanen dengan metode tradisional yang menjaga keaslian dan khasiatnya.
+                </p>
+                
+                {/* Features Boxes */}
+                <div className="space-y-3 mb-6">
+                  <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+                        🍯
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 mb-1">Konsumsi Kesehatan</h4>
+                        <p className="text-gray-600 text-sm">Kaya antioksidan, meningkatkan imunitas, dan menjaga kesehatan tubuh secara alami</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="bg-amber-50 rounded-xl p-4 border border-amber-100">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 bg-amber-200 rounded-full flex items-center justify-center flex-shrink-0 text-xl">
+                        ✨
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-gray-800 mb-1">Masker Kosmetik Alami</h4>
+                        <p className="text-gray-600 text-sm">Melembabkan kulit, mengurangi jerawat, dan memberikan nutrisi alami untuk wajah bercahaya</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Contact Seller Box */}
+                <div className="bg-green-700 text-white rounded-xl p-6 mt-4">
+                  <div className="flex items-center gap-3 mb-4">
+                    <img 
+                      src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces"
+                      alt="Ibu Siti Nurhaliza"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-white"
+                    />
+                    <div>
+                      <p className="text-xs text-green-200">Hubungi Penjual</p>
+                      <h4 className="font-bold text-lg">Ibu Siti Nurhaliza</h4>
+                    </div>
+                  </div>
+                  <a
+                    href="https://wa.me/6281234567890?text=Halo,%20saya%20tertarik%20dengan%20Madu%20Apikalis"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 bg-white text-green-700 font-bold py-3 rounded-lg hover:bg-green-50 transition"
+                  >
+                    <svg className="w-5 h-5" fill="currentColor" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640">
+                      <path d="M476.9 161.1C435 119.1 379.2 96 319.9 96C197.5 96 97.9 195.6 97.9 318C97.9 357.1 108.1 395.3 127.5 429L96 544L213.7 513.1C246.1 530.8 282.6 540.1 319.8 540.1L319.9 540.1C442.2 540.1 544 440.5 544 318.1C544 258.8 518.8 203.1 476.9 161.1zM319.9 502.7C286.7 502.7 254.2 493.8 225.9 477L219.2 473L149.4 491.3L168 423.2L163.6 416.2C145.1 386.8 135.4 352.9 135.4 318C135.4 216.3 218.2 133.5 320 133.5C369.3 133.5 415.6 152.7 450.4 187.6C485.2 222.5 506.6 268.8 506.5 318.1C506.5 419.9 421.6 502.7 319.9 502.7zM421.1 364.5C415.6 361.7 388.3 348.3 383.2 346.5C378.1 344.6 374.4 343.7 370.7 349.3C367 354.9 356.4 367.3 353.1 371.1C349.9 374.8 346.6 375.3 341.1 372.5C308.5 356.2 287.1 343.4 265.6 306.5C259.9 296.7 271.3 297.4 281.9 276.2C283.7 272.5 282.8 269.3 281.4 266.5C280 263.7 268.9 236.4 264.3 225.3C259.8 214.5 255.2 216 251.8 215.8C248.6 215.6 244.9 215.6 241.2 215.6C237.5 215.6 231.5 217 226.4 222.5C221.3 228.1 207 241.5 207 268.8C207 296.1 226.9 322.5 229.6 326.2C232.4 329.9 268.7 385.9 324.4 410C359.6 425.2 373.4 426.5 391 423.9C401.7 422.3 423.8 410.5 428.4 397.5C433 384.5 433 373.4 431.6 371.1C430.3 368.6 426.6 367.2 421.1 364.5z"/>
+                    </svg>
+                    Chat Sekarang
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Button Produk Lainnya */}
+          <div className="text-center">
+            <a 
+              href="/umkm" 
+              className="inline-flex items-center gap-2 bg-green-700 hover:bg-green-800 text-white font-semibold px-8 py-3 rounded-full transition"
+            >
+              Lihat Produk Lainnya
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Lokasi Desa */}
+      <section id="contact" className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
+            Lokasi Desa
+          </h2>
+          <p className="text-center text-gray-600 mb-12">
+            Temukan lokasi kami di peta untuk berkunjung dan berkenalan dengan Desa Pemerihan
+          </p>
+
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+            <div className="aspect-video bg-gray-200 flex items-center justify-center">
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d63532.486454821694!2d104.39759289999999!3d-5.599427499999999!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x2e46fc36d9732b21%3A0x67e2ec59e8907c3f!2sPemerihan%2C%20Bangkunat%2C%20West%20Pesisir%20Regency%2C%20Lampung!5e0!3m2!1sen!2sid!4v1767796562207!5m2!1sen!2sid"
+                width="100%"
+                height="100%"
+                style={{ border: 0 }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                className="w-full h-full"
+              />
+            </div>
+            <div className="p-6 text-center bg-gradient-to-r from-green-600 to-green-700 text-white">
+              <div className="flex items-center justify-center gap-2 mb-2">
+                <MapPin className="w-5 h-5" />
+                <h3 className="text-xl font-bold">Desa Sejahtera</h3>
+              </div>
+              <p className="text-green-100">Bengkunat Belimbing, Kabupaten Pesisir Barat</p>
+              <div className="mt-4 text-sm text-green-100">
+                📍 Lampung 123-45678
+              </div>
+            </div>
+          </div>
+
+          {/* Contact Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="bg-white rounded-xl p-6 shadow-md text-center">
+              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-6 h-6 text-green-700" />
+              </div>
+              <h4 className="font-bold text-gray-800 mb-2">Alamat Kantor</h4>
+              <p className="text-gray-600 text-sm">
+                Jl. Desa Sejahtera No.123, Kec. Matus, Jawa Timur
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md text-center">
+              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Phone className="w-6 h-6 text-blue-700" />
+              </div>
+              <h4 className="font-bold text-gray-800 mb-2">Telepon</h4>
+              <p className="text-gray-600 text-sm">
+                Tlpn: +62123456789<br />
+                Fax: +62123456789
+              </p>
+            </div>
+
+            <div className="bg-white rounded-xl p-6 shadow-md text-center">
+              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-6 h-6 text-orange-700" />
+              </div>
+              <h4 className="font-bold text-gray-800 mb-2">Email</h4>
+              <p className="text-gray-600 text-sm">
+                Senin - Jumat : 08:00 - 16:00<br />
+                Sabtu : 08:00 - 12:00
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Kabar Desa (News) */}
+      <section className="py-16 md:py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
+            Kabar Desa
+          </h2>
+          <p className="text-center text-gray-600 mb-12">
+            Berita terkini dan kegiatan terbaru dari Desa Pemerihan untuk kepentingan bersama
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {newsArticles.map((article, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow">
+                <div className="relative">
+                  <span className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full z-10">
+                    {article.category}
+                  </span>
+                  <img 
+                    src={article.image}
+                    alt={article.title}
+                    className="w-full h-48 object-cover"
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="text-sm text-gray-500 mb-2">{article.date}</div>
+                  <h4 className="font-bold text-gray-800 mb-3 line-clamp-2">
+                    {article.title}
+                  </h4>
+                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                    {article.excerpt}
+                  </p>
+                  <a href="#" className="text-green-600 font-semibold text-sm hover:text-green-700 inline-flex items-center gap-1">
+                    Baca Selengkapnya →
+                  </a>
                 </div>
               </div>
             ))}
-            <div className="flex sm:hidden start-snap"></div>
+          </div>
+
+          <div className="text-center mt-12">
+            <button className="bg-amber-600 text-white font-semibold px-8 py-3 rounded-full hover:bg-amber-700 transition">
+              Lihat Semua Berita →
+            </button>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center landscape:h-[150vh] portrait:w-[100%] portrait:aspect-[1/4] portrait:lg:aspect-[5/4.5] portrait:md:aspect-[1/1.15] portrait:sm:aspect-[1/1.8] bg-[#FFF8DE]">
-        <div className="flex flex-col items-center h-[100%] w-[90%]">
-          <div className="flex flex-col h-[67%] w-[100%] gap-[2%]">
-            <div className="flex flex-col items-center h-[30%] w-[100%] gap-[3%] sm:gap-0">
-              <div className="flex justify-center items-end h-[40%] sm:h-[65%] w-[100%] text-[#452829] text-[clamp(12px,2vw,40px)] portrait:text-[clamp(12px,2vh,40px)]">
-                <b>Produk Unggulan Desa</b>
-              </div>
-              <div className="flex bg-[#E9B63B] h-[2%] w-[8%] rounded-[5px] mt-[1%]"></div>
-              <div className="flex justify-center items-center h-[33%] w-[100%] text-center">
-                Produk berkualitas dari UMKM lokal yang dikelola dengan penuh
-                dedikasi oleh masyarakat desa
-              </div>
-            </div>
-            <div className="flex flex-col sm:flex-row h-[70%] w-[100%] rounded-2xl bg-white shadow-[0_3px_16px_rgba(0,0,0,0.20)]">
-              <div className="relative w-[100%] h-[50%] sm:w-[50%] sm:h-[100%]">
-                <div className="absolute w-[100%] h-[100%]">
-                  <div className="flex justify-center items-center h-[100%] w-[100%]">
-                    Image
-                  </div>
-                </div>
-                <div className="absolute top-5 left-5 w-[40%] md:w-[30%] h-[10%] md:h-[7%] bg-[#FFD41D] text-[clamp(12px,1.1vw,15px)] rounded-full">
-                  <div className="flex justify-center items-center h-[100%] w-[100%] text-[clamp(10px,1vw,15px)]">
-                    PRODUK UNGGULAN
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center items-center w-[100%] h-[100%] sm:w-[50%]">
-                <div className="flex flex-col h-[90%] w-[90%]">
-                  <div className="flex h-[7%]">
-                    <div className="flex justify-center items-center bg-[#A8BBA3] w-[30%] md:w-[25%] h-[100%] rounded-sm text-[#452829] font-bold p-[1px]  text-[clamp(10px,1vw,15px)]">
-                      Produk Alami
-                    </div>
-                  </div>
-                  <div className="flex items-center h-[14%] text-[#452829] text-[clamp(12px,2vw,40px)] font-bold">
-                    {produkData[1].nama}
-                  </div>
-                  <div className="flex h-[25%] text-gray-500">
-                    {produkData[1].long_desc}
-                  </div>
-                  <div className="flex flex-col h-[25%]">
-                    {produkData[1].advantage.map((item, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center flex-row h-[25%] gap-[5px]"
-                      >
-                        <PiSealCheckFill className="text-[#AA2B1D]" />
-                        <div className="flex">{item}</div>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="flex flex-row gap-2 h-[5%]">
-                    <div className="flex flex-row gap-[5px]">
-                      {Array.from({ length: 5 }).map((_, index) => {
-                        if (produkData[1].star >= index + 1) {
-                          return (
-                            <FaStar
-                              key={index}
-                              className="h-[100%] w-auto text-yellow-500"
-                            />
-                          );
-                        } else if (produkData[1].star >= index + 0.5) {
-                          return (
-                            <FaStarHalfAlt
-                              key={index}
-                              className="h-[100%] w-auto text-yellow-500"
-                            />
-                          );
-                        } else {
-                          return (
-                            <FaRegStar
-                              key={index}
-                              className="h-[100%] w-auto text-yellow-500"
-                            />
-                          );
-                        }
-                      })}
-                    </div>
-                    <div className="text-gray-500">
-                      ({produkData[1].review}) Ulasan
-                    </div>
-                  </div>
-                  <div className="flex flex-row gap-2 items-center h-[12%]">
-                    <div className="flex items-center font-bold text-[#452829] text-[clamp(20px,1.7vw,30px)]">
-                      Rp.{produkData[1].price}
-                    </div>
-                    <div className="flex items-center text-gray-500 text-[clamp(12px,1.2vw,20px)] line-through">
-                      Rp.{produkData[1].price * (1 - produkData[1].disc / 100)}
-                    </div>
-                    <div className="flex items-center justify-center w-[15%] sm:w-[10%] h-[40%] bg-[#AA2B1D] rounded-md text-white text-[clamp(12px,1.2vw,20px)]">
-                      -{produkData[1].disc}%
-                    </div>
-                  </div>
-                  <div className="flex flex-row justify-center items-center gap-2 h-[12%] bg-[#AA2B1D] rounded-md">
-                    <FaShoppingCart className="text-white" />
-                    <div className="text-white">Beli Sekarang</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-row items-center h-[33%] w-[100%]">
-            <div className="flex items-center gap-6 portrait:lg:gap-6 portrait:sm:gap-4 overflow-x-auto snap-x snap-mandatory px-4 scrollbar-hide w-[100%] h-[100%]">
-              <div className="hidden start-snap"></div>
-              {produkData.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex justify-center items-center flex-shrink-0 landscape:w-[32%] portrait:w-[100%] portrait:lg:w-[32%] portrait:sm:w-[49%] h-[100%]"
-                >
-                  <div className="flex flex-col gap-2 justify-center items-center rounded-xl shadow-[0_3px_16px_rgba(0,0,0,0.12)] p-3 text-center h-[90%] w-full aspect-[3/4] bg-white">
-                    <div className="flex justify-center items-center w-[95%] h-[60%] rounded-2xl border-2 border-yellow-400">
-                      Image
-                    </div>
-                    <div className="flex flex-col justify-between items-center h-[40%] w-[100%]">
-                      <div className="flex flex-col h-[60%] w-[100%] items-center">
-                        <div className="flex items-left w-[95%] font-semibold text-[#452829]">
-                          {item.nama}
-                        </div>
-                        <div className="flex items-left w-[95%] text-sm text-gray-500 text-left">
-                          {item.short_desc}
-                        </div>
-                      </div>
-                      <div className="flex flex-row justify-between items-center gap-3 h-[40%] w-[95%]">
-                        <div className="flex font-bold text-[#452829] text-[clamp(20px,1.7vw,30px)]">
-                          Rp. {item.price}
-                        </div>
-                        <div className="flex justify-center items-center bg-[#FFD41D] h-[60%] w-[20%] rounded-md text-[clamp(15px,1.2vw,20px)]">
-                          <div className="">Lihat</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
+      </section>
+
+      {/* CTA Section - Kunjungi Desa */}
+      <section className="py-16 md:py-20 bg-gradient-to-r from-amber-700 to-amber-900 text-white">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">
+            Kunjungi Desa Sejahtera
+          </h2>
+          <p className="text-lg md:text-xl text-amber-100 mb-8">
+            Nikmati keindahan alam, budaya lokal, dan keramahan masyarakat Desa Pemerihan. 
+            Kami siap menyambut Anda dengan hangat!
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <a 
+              href="#contact" 
+              className="bg-yellow-400 text-gray-900 font-semibold px-8 py-3 rounded-full hover:bg-yellow-500 transition inline-flex items-center justify-center gap-2"
+            >
+              <Phone className="w-5 h-5" />
+              Hubungi Kami
+            </a>
+            <a 
+              href="/tentang" 
+              className="bg-transparent border-2 border-white text-white font-semibold px-8 py-3 rounded-full hover:bg-white hover:text-amber-900 transition"
+            >
+              Tentang Kami
+            </a>
           </div>
         </div>
-      </div>
-      <div className="flex flex-col items-center landscape:h-[140vh] portrait:w-[100%] portrait:aspect-[1/3.2] portrait:lg:aspect-[5/4.5] portrait:md:aspect-[1/1.2] portrait:sm:aspect-[1/1.8] gap-[2%]">
-        <div className="flex flex-col items-center h-[15%] sm:h-[20%] w-[100%]">
-          <div className="flex justify-center items-end h-[40%] sm:h-[65%] w-[100%] text-[#452829] text-[clamp(12px,2vw,40px)] portrait:text-[clamp(12px,2vh,40px)]">
-            <b>Lokasi Desa</b>
-          </div>
-          <div className="flex bg-[#E9B63B] h-[2%] w-[8%] rounded-[5px] mt-[1%]"></div>
-          <div className="flex justify-center items-center h-[58%] sm:h-[33%] w-[100%] text-center p-[2%] sm:p-0">
-            Temukan kami di kawasan yang mudah diakses dengan pemandangan alam
-            yang menakjubkan
-          </div>
-        </div>
-        <div className="flex flex-col h-[85%] sm:h-[73%] w-[90%]">
-          <div className="flex flex-col items-center justify-center gap-2 bg-gray-500 rounded-md aspect-square sm:h-[65%] w-[100%] shadow-[0_3px_16px_rgba(0,0,0,0.4)]">
-            <div className="flex justify-center items-center bg-[#452829] rounded-full h-[13%] aspect-square">
-              <FaLocationDot className="text-yellow-500 w-[45%] h-auto" />
-            </div>
-            <div className="flex justify-center h-auto w-[100%] text-[#452829] text-[clamp(12px,1.4vw,30px)]">
-              <b>Lokasi Desa</b>
-            </div>
-            <div className="flex">Kecamatan Makmur, Kabupaten Makmur</div>
-            <div className="flex flex-row justify-center items-center gap-2 w-[100%] h-auto">
-              <FaLocationDot className="text-[#452829] w-[1.5%] h-auto" />
-              <div>Some coordinate....</div>
-            </div>
-          </div>
-          <div className="flex flex-row items-center h-[65%] sm:h-[35%] w-[100%]">
-            <div className="flex flex-col sm:flex-row justify-between items-center h-[100%] w-[100%]">
-              <div className="flex justify-center items-center flex-shrink-0 w-[100%] sm:w-[32%] h-[32%] sm:h-[100%]">
-                <div className="flex flex-col gap-2 justify-center items-start rounded-xl shadow-[0_3px_16px_rgba(0,0,0,0.12)] p-3 h-[90%] w-full aspect-[3/4] bg-white">
-                  <div className="flex justify-center items-center bg-yellow-500 rounded-full h-[20%] aspect-square">
-                    <FaLocationDot className="text-[#452829] w-[45%] h-auto" />
-                  </div>
-                  <div className="flex items-left w-[95%] font-semibold text-[#452829]">
-                    Alamat
-                  </div>
-                  <div className="flex w-[100%] text-sm text-gray-500">
-                    Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem
-                    Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum
-                    Dolor Sit Amet Lorem Ipsum Dolor Sit Amet
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center items-center flex-shrink-0 w-[100%] sm:w-[32%] h-[32%] sm:h-[100%]">
-                <div className="flex flex-col gap-2 justify-center items-start rounded-xl shadow-[0_3px_16px_rgba(0,0,0,0.12)] p-3 h-[90%] w-full aspect-[3/4] bg-white">
-                  <div className="flex justify-center items-center bg-yellow-500 rounded-full h-[20%] aspect-square">
-                    <BsFillTelephoneFill className="text-[#452829] w-[45%] h-auto" />
-                  </div>
-                  <div className="flex items-left w-[95%] font-semibold text-[#452829]">
-                    Kontak
-                  </div>
-                  <div className="flex w-[100%] text-sm text-gray-500">
-                    Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem
-                    Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum
-                    Dolor Sit Amet Lorem Ipsum Dolor Sit Amet
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-center items-center flex-shrink-0 w-[100%] sm:w-[32%] h-[32%] sm:h-[100%]">
-                <div className="flex flex-col gap-2 justify-center items-start rounded-xl shadow-[0_3px_16px_rgba(0,0,0,0.12)] p-3 h-[90%] w-full aspect-[3/4] bg-white">
-                  <div className="flex justify-center items-center bg-yellow-500 rounded-full h-[20%] aspect-square">
-                    <FaClock className="text-[#452829] w-[45%] h-auto" />
-                  </div>
-                  <div className="flex items-left w-[95%] font-semibold text-[#452829]">
-                    Alamat
-                  </div>
-                  <div className="flex w-[100%] text-sm text-gray-500">
-                    Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem
-                    Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem Ipsum
-                    Dolor Sit Amet Lorem Ipsum Dolor Sit Amet
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col items-center landscape:h-[100vh] portrait:w-[100%] portrait:aspect-[1/2] portrait:lg:aspect-[3/1.8] portrait:md:aspect-[3/2.5] portrait:sm:aspect-[1/1.2] bg-[#F5F2F2]">
-        <div className="flex flex-col items-center h-[20%] w-[100%]">
-          <div className="flex justify-center items-end h-[40%] sm:h-[65%] w-[100%] text-[#452829] text-[clamp(12px,2vw,40px)] portrait:text-[clamp(12px,2vh,40px)]">
-            <b>Kabar Desa</b>
-          </div>
-          <div className="flex bg-[#E9B63B] h-[2%] w-[8%] rounded-[5px] mt-[1%]"></div>
-          <div className="flex justify-center items-center h-[58%] sm:h-[33%] w-[100%] text-center p-[3%] sm:p-0">
-            Berita terkini dan artikel menarik seputar perkembangan dan kegiatan
-            di Desa Sejahtera
-          </div>
-        </div>
-        <div className="flex flex-row h-[65%] w-[100%] sm:w-[90%]">
-          <div className="flex flex-row items-center h-[100%] w-[100%]">
-            <div className="flex items-center gap-6 overflow-x-auto snap-x snap-mandatory px-4 scrollbar-hide w-[100%] h-[100%]">
-              <div className="hidden start-snap"></div>
-              {newsData.map((item, i) => (
-                <div
-                  key={i}
-                  className="flex justify-center items-center flex-shrink-0 landscape:w-[32%] portrait:lg:w-[32%] portrait:md:w-[49%] h-[100%]"
-                >
-                  <div className="flex flex-col justify-start items-center rounded-xl shadow-[0_3px_16px_rgba(0,0,0,0.12)] h-[90%] w-full aspect-[3/4] bg-white">
-                    <div className="flex justify-center items-center w-[100%] h-[60%] rounded-t-xl border-1 border-yellow-400">
-                      Image
-                    </div>
-                    <div className="flex flex-col justify-between gap-1 p-3 w-[100%] h-[40%]">
-                      <div className="flex flex-row gap-3 items-left w-[100%] h-[15%]">
-                        <div className="flex justify-center items-center bg-yellow-500 h-[100%] w-[35%] rounded-full font-semibold text-[#452829] text-[clamp(11px,1.1vw,14px)]">
-                          {item.news_type}
-                        </div>
-                        <div className="flex text-gray-500 text-[clamp(11px,1.1vw,14px)]">
-                          {formatTanggal(item.date)}
-                        </div>
-                      </div>
-                      <div className="flex font-semibold text-[#452829] text-[clamp(12px,1.3vw,20px)]">
-                        {item.title}
-                      </div>
-                      <div className="flex text-gray-500 text-[clamp(12px,1.1vw,15px)]">
-                        {item.desc}
-                      </div>
-                      <div className="flex flex-row items-baseline gap-2">
-                        <div className="text-[#452829] text-[clamp(11px,1.3vw,15px)] font-semibold">
-                          Baca Selengkapnya
-                        </div>
-                        <FaArrowRight className="text-[#452829] translate-y-[25%]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-center items-center h-[15%] sm:h-[15%] w-[100%]">
-          <div className="flex justify-center items-center bg-[#AA2B1D] gap-3 rounded-xl h-[55%] w-[55%] sm:w-[25%]">
-            <div className="text-white text-[clamp(12px,1.1vw,15px)]">
-              Lihat Semua Artikel
-            </div>
-            <FaArrowRight className="text-white" />
-          </div>
-        </div>
-      </div>
-      <div className="flex flex-col bg-[#3B060A] landscape:h-[100vh] portrait:w-[100%] portrait:aspect-[1/2.8] portrait:sm:aspect-[2/1.3]">
-        <div className="flex flex-col justify-center h-[25%] sm:h-[43%] bg-[#B87C4C]">
-          <div className="flex flex-col justify-center items-center text-center gap-3 h-[65%]">
-            <div className="flex font-bold text-[clamp(12px,2.3vw,40px)] portrait:text-[clamp(12px,2.3vh,40px)] text-white">
-              Kunjungi Desa Sejahtera
-            </div>
-            <div className="flex text-[clamp(12px,1.5vw,20px)] portrait:text-[clamp(12px,1.5vh,20px)] text-yellow-500">
-              Lorem Ipsum DOlor SIt AMet adispiscis consectetur elit
-            </div>
-            <div className="flex flex-row items-center justify-between gap-3 h-[40%] landscape:w-[35%] portrait:w-[80%] portrait:sm:w-[45%]">
-              <div className="flex flex-row justify-center items-center h-[90%] w-[60%] gap-2 rounded-xl bg-yellow-500">
-                <FaCalendarCheck className="text-brown-500" />
-                <div className="text-brown-500 font-semibold text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(10px,1.2vh,18px)]">
-                  Jadwalkan Kunjungan
-                </div>
-              </div>
-              <div className="flex flex-row justify-center items-center h-[90%] w-[40%] border-white border-2 gap-2 rounded-xl bg-white/30">
-                <BsFillTelephoneFill className="text-white" />
-                <div className="text-white font-semibold text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(10px,1.2vh,18px)]">
-                  Hubungi Kami
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className="h-[1px] bg-[#D9CFC7]"></div>
-        <div className="flex flex-col justify-center items-center h-[75%] w-[100%]">
-          <div className="flex flex-col h-[100%] w-[90%]">
-            <div className="flex flex-col gap-[2%] sm:flex-row h-[90%] sm:h-[80%] w-[100%] pt-5 sm:pt-7">
-              <div className="flex flex-col h-[25%] sm:h-[100%] w-[100%] sm:w-[25%]">
-                <div className="flex flex-row landscape:gap-[8%] portrait:gap-[3%] portrait:sm:gap-[15%] h-[50%] sm:h-[30%] w-[100%]">
-                  <div className="flex justify-center items-center w-[15%] sm:w-[20%] aspect-square">
-                    <div className="flex justify-center items-center sm:h-[50%] h-[50%] aspect-square bg-yellow-500 rounded-full">
-                      <FaMountainSun className="h-[50%] w-auto" />
-                    </div>
-                  </div>
-                  <div className="flex flex-col h-[100%] w-[80%]">
-                    <div className="flex items-end font-semibold h-[50%] w-[100%] text-white text-[clamp(20px,1.5vw,30px)] sm:text-[clamp(12px,1.5vw,30px)]">
-                      Desa Sejahtera
-                    </div>
-                    <div className="flex sm:h-[50%] w-[100%] text-yellow-500 portrait:text-[clamp(15px,1vw,15px)] portrait:sm:text-[clamp(10px,1.5vw,30px)] text-[clamp(10px,1.5vw,15px)]">
-                      Kabupaten Makmur
-                    </div>
-                  </div>
-                </div>
-                <div className="flex justify-left h-[50%] sm:h-[70%] items-start text-[#D9CFC7] text-[clamp(10px,1vw,15px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)] pt-3">
-                  Lorem Ipsum Dolor Sit Amet Lorem Ipsum Dolor Sit Amet Lorem
-                  Ipsum Dolor Sit Amet
-                </div>
-              </div>
-              <div className="flex flex-col gap-3 sm:gap-7 h-[25%] sm:h-[100%] w-[100%] sm:w-[25%]">
-                <div className="flex items-end text-white h-[15%] font-semibold text-[clamp(12px,1.5vw,30px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(12px,1.5vw,30px)]">
-                  Navigasi
-                </div>
-                <div className="flex flex-col gap-2 h-auto w-[100%]">
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Beranda
-                  </div>
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Tentang Desa
-                  </div>
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Pejabat Desa
-                  </div>
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Produk UMKM
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col gap-3 sm:gap-7 h-[25%] sm:h-[100%] w-[100%] sm:w-[25%]">
-                <div className="flex items-end text-white h-[15%] font-semibold text-[clamp(12px,1.5vw,30px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(12px,1.5vw,30px)]">
-                  Layanan
-                </div>
-                <div className="flex flex-col gap-2 h-auto w-[100%]">
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Administrasi Desa
-                  </div>
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Pengaduan Masyarakat
-                  </div>
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Informasi Publik
-                  </div>
-                  <div className="flex text-[#D9CFC7] text-[clamp(10px,1.2vw,18px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                    Perizinan
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col h-[25%] sm:h-[100%] w-[100%] sm:w-[25%]">
-                <div className="flex items-end text-white h-[15%] font-semibold text-[clamp(12px,1.5vw,30px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(12px,1.5vw,30px)]">
-                  Kontak Kami
-                </div>
-                <div className="flex items-center h-[100%] sm:h-[85%]">
-                  <div className="flex flex-col landscape:gap-3 portrait:lg:gap-3 portrait:gap-1.5 h-[80%] w-[100%]">
-                    <div className="flex flex-row items-center gap-3 h-[25%]">
-                      <FaLocationDot className="h-[80%] aspect-square text-yellow-500" />
-                      <div className="text-[#D9CFC7] text-[clamp(10px,1vw,15px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                        Jl. Raya Sejahtera No. 123, Kab. Makmur
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center gap-3 h-[25%]">
-                      <BsFillTelephoneFill className="h-[80%] aspect-square text-yellow-500" />
-                      <div className="text-[#D9CFC7] text-[clamp(10px,1vw,15px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                        Jl. Raya Sejahtera No. 123, Kab. Makmur
-                      </div>
-                    </div>
-                    <div className="flex flex-row items-center gap-3 h-[25%]">
-                      <IoMdMail className="h-[80%] aspect-square text-yellow-500" />
-                      <div className="text-[#D9CFC7] text-[clamp(10px,1vw,15px)] portrait:text-[clamp(15px,1vw,20px)] portrait:sm:text-[clamp(10px,1.5vw,30px)]">
-                        Jl. Raya Sejahtera No. 123, Kab. Makmur
-                      </div>
-                    </div>
-                    <div className="flex flex-row gap-3 h-[25%]">
-                      <div className="flex justify-center items-center bg-white/30 rounded-full h-[100%] aspect-square">
-                        <FaFacebookF className="landscape:h-[85%] portrait:lg:h-[85%] portrait:md:h-[60%] text-white text-[clamp(10px,1.2vw,15px)] portrait:text-[clamp(15px,1vw,20px)]" />
-                      </div>
-                      <div className="flex justify-center items-center bg-white/30 rounded-full h-[100%] aspect-square">
-                        <FaInstagram className="landscape:h-[85%] portrait:lg:h-[85%] portrait:md:h-[60%] text-white text-[clamp(10px,1.5vw,20px)] portrait:text-[clamp(15px,1vw,20px)]" />
-                      </div>
-                      <div className="flex justify-center items-center bg-white/30 rounded-full h-[100%] aspect-square">
-                        <FaYoutube className="landscape:h-[85%] portrait:lg:h-[85%] portrait:md:h-[60%] text-white text-[clamp(10px,1.5vw,20px)] portrait:text-[clamp(15px,1vw,20px)]" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="h-[1px] w-[100%] bg-white"></div>
-            <div className="flex justify-center items-center h-[10%] sm:h-[20%] w-[100%] text-white text-[clamp(10px,1.5vw,20px)]">
-              © 2025 Desa Sejahtera. All rights reserved.
-            </div>
-          </div>
-        </div>
-      </div>
+      </section>
+
+      <ContactModal 
+        isOpen={selectedContact !== null}
+        onClose={() => setSelectedContact(null)}
+      />
     </div>
   );
 }
