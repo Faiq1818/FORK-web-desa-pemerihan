@@ -11,6 +11,9 @@ const ArticleSchema = z.object({
   featuredImageUrl: z.string().optional(),
 });
 
+/////////
+// PUT //
+/////////
 export async function PUT(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -103,6 +106,9 @@ export async function PUT(
   }
 }
 
+////////////
+// DELETE //
+////////////
 export async function DELETE(
   req: Request,
   { params }: { params: Promise<{ id: string }> },

@@ -1,6 +1,6 @@
 export default function Header() {
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-gray-200">
+    <header className="top-0 z-50 bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16 md:h-20">
           <div className="flex items-center gap-3">
@@ -27,10 +27,16 @@ export default function Header() {
               Tentang
             </a>
             <a
+              href="/shop"
+              className="text-gray-700 hover:text-green-700 font-medium"
+            >
+              Produk UMKM
+            </a>
+            <a
               href="/umkm"
               className="text-gray-700 hover:text-green-700 font-medium"
             >
-              UMKM
+              UMKM (deprecated)
             </a>
             <a
               href="/artikel"

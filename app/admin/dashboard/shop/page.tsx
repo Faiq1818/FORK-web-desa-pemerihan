@@ -13,6 +13,10 @@ export default function Page() {
   const [shopItem, setShopItem] = useState<any>([]);
   const router = useRouter();
 
+  useEffect(() => {
+    getShopData();
+  }, []);
+
   const getShopData = async () => {
     const token = localStorage.getItem("auth");
     try {
@@ -46,23 +50,16 @@ export default function Page() {
     }
   };
 
-  useEffect(() => {
-    getShopData();
-  }, []);
-
   const handleDelete = async (id: number) => {
     const token = localStorage.getItem("auth");
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/shopitem/id/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await fetch(`http://localhost:3000/api/shopitem/id/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       // error handling
       if (!res.ok) {
@@ -70,11 +67,11 @@ export default function Page() {
       }
 
       // running get shop data again to refresh data without refreshing all page
-      getShopData()
+      getShopData();
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-dvh bg-white">

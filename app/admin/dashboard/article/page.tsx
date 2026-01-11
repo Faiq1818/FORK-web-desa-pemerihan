@@ -14,40 +14,64 @@ export default function ArticleDashboard() {
   const router = useRouter();
 
   useEffect(() => {
-    const getArticleData = async () => {
-      const token = localStorage.getItem("auth");
-      try {
-        const res = await fetch(
-          "http://localhost:3000/api/article?page=1&limit=10",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          },
-        );
-
-        const data = await res.json();
-
-        // if success != true, fallback user to login page
-        if (!data.success) {
-          router.push("/auth/login");
-          return;
-        }
-
-        // error handling
-        if (!res.ok) {
-          throw new Error("Request failed");
-        }
-
-        setArticles(data.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
     getArticleData();
   }, []);
+
+  const getArticleData = async () => {
+    const token = localStorage.getItem("auth");
+    try {
+      const res = await fetch(
+        "http://localhost:3000/api/article?page=1&limit=10",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const data = await res.json();
+
+      // if success != true, fallback user to login page
+      if (!data.success) {
+        router.push("/auth/login");
+        return;
+      }
+
+      // error handling
+      if (!res.ok) {
+        throw new Error("Request failed");
+      }
+
+      setArticles(data.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDelete = async (id: number) => {
+    const token = localStorage.getItem("auth");
+    try {
+      const res = await fetch(`http://localhost:3000/api/article/id/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      // error handling
+      if (!res.ok) {
+        throw new Error("Request failed");
+      }
+
+      // running get shop data again to refresh data without refreshing all page
+      getArticleData();
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-dvh bg-[#FFFFFF]">
@@ -93,7 +117,10 @@ export default function ArticleDashboard() {
                 >
                   <MdOutlineModeEdit />
                 </Link>
-                <button className="px-3 py-1 text-xl text-[#e64553] hover:bg-red-50 rounded">
+                <button
+                  className="px-3 py-1 text-xl text-[#e64553] hover:bg-red-50 rounded"
+                  onClick={() => handleDelete(article.id)}
+                >
                   <CiTrash />
                 </button>
               </div>
