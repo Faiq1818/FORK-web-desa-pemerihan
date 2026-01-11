@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { timeFormatter } from "@/libs/timeFormatterToID";
-import Link from "next/link"; // Opsional: Untuk navigasi ke detail
+import Link from "next/link";
+import { getShopItemImages } from "@/libs/presignedDownloadHelper";
+import formatRupiah from "@/libs/rupiahFormat";
 
-// 1. Definisi Tipe Data sesuai Schema Prisma
 interface ShopItem {
   createdAt: string;
   name: string;
@@ -11,32 +12,34 @@ interface ShopItem {
   slug: string;
   contact: string;
   description: string;
-  imagesUrl: string[]; // Map dari database column "images"
+  imagesUrl: string[];
 }
 
 export default function Page() {
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
+  const [imgArr, setImgArr] = useState<string[]>([]);
+  const [imgDownloadArr, setImgDownloadArr] = useState<(string | null)[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getShopData();
   }, []);
 
-  // Helper untuk format Rupiah
-  const formatRupiah = (number: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
+  useEffect(() => {
+    if (imgArr.length === 0) return;
+
+    const getPresigned = async () => {
+      const url = await getShopItemImages(imgArr)
+      setImgDownloadArr(url)
+    }
+    getPresigned()
+  }, [imgArr]);
 
   const getShopData = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("auth");
 
     try {
-      // Catatan: Pastikan URL API sudah benar
       const res = await fetch(
         "http://localhost:3000/api/shopitem/client?page=1&limit=10",
         {
@@ -54,6 +57,11 @@ export default function Page() {
         throw new Error(data.message || "Gagal mengambil data");
       }
 
+      // mapping ke seluruh item image url untuk dibuatkan presigneddownload
+      const collectedImages = data.data.map((item: any) => item.imagesUrl[0]);
+      setImgArr(collectedImages);
+
+      // getShopItemImages(data.data.)
       setShopItems(data.data);
     } catch (err) {
       console.error("Fetch Error:", err);
@@ -78,57 +86,51 @@ export default function Page() {
       {/* Grid Layout untuk Card */}
       {!isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {shopItems.map((item) => (
+          {shopItems.map((item, i) => (
+
             <div
               key={item.slug}
               className="group bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col"
             >
-              {/* Bagian Image - Mengambil index 0 */}
-              <div className="relative aspect-square bg-gray-100 overflow-hidden">
-                {item.imagesUrl && item.imagesUrl.length > 0 ? (
-                  <img
-                    src={item.imagesUrl[0]}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                ) : (
-                  // Fallback jika tidak ada gambar
-                  <div className="flex items-center justify-center w-full h-full text-gray-400">
-                    <span className="text-sm">No Image</span>
-                  </div>
-                )}
-              </div>
 
-              {/* Bagian Konten */}
-              <div className="p-4 flex flex-col flex-grow">
-                {/* Tanggal */}
-                <span className="text-xs text-gray-500 mb-1">
-                  {timeFormatter(item.createdAt)}
-                </span>
+              {/* Action Button */}
+              <Link
+                href={`/shop/${item.slug}`} // Sesuaikan dengan routing detail page Anda
+              >
+                {/* Bagian Image - Mengambil index 0 */}
+                <div className="relative aspect-square bg-gray-100 overflow-hidden">
+                  {item.imagesUrl && item.imagesUrl.length > 0 ? (
+                    <img
+                      src={imgDownloadArr[i]!}
+                      alt={item.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : (
+                    // Fallback jika tidak ada gambar
+                    <div className="flex items-center justify-center w-full h-full text-gray-400">
+                      <span className="text-sm">No Image</span>
+                    </div>
+                  )}
+                </div>
 
-                {/* Nama Produk (Truncate jika terlalu panjang) */}
-                <h3 className="font-semibold text-gray-800 text-lg mb-1 truncate" title={item.name}>
-                  {item.name}
-                </h3>
+                {/* Bagian Konten */}
+                <div className="p-4 flex flex-col flex-grow">
+                  {/* Nama Produk (Truncate jika terlalu panjang) */}
+                  <h3 className="font-semibold text-gray-800 text-lg mb-1 truncate" title={item.name}>
+                    {item.name}
+                  </h3>
 
-                {/* Harga */}
-                <p className="text-emerald-600 font-bold text-lg mb-2">
-                  {formatRupiah(item.price)}
-                </p>
+                  {/* Harga */}
+                  <p className="text-emerald-600 font-bold text-lg mb-2">
+                    {formatRupiah(item.price)}
+                  </p>
 
-                {/* Deskripsi Singkat */}
-                <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">
-                  {item.description}
-                </p>
-
-                {/* Action Button */}
-                <Link
-                  href={`/shop/${item.slug}`} // Sesuaikan dengan routing detail page Anda
-                  className="w-full mt-auto py-2 px-4 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition-colors text-center"
-                >
-                  Lihat Detail
-                </Link>
-              </div>
+                  {/* Deskripsi Singkat */}
+                  <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">
+                    {item.description}
+                  </p>
+                </div>
+              </Link>
             </div>
           ))}
         </div>
