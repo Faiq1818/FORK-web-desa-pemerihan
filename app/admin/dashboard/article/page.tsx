@@ -53,16 +53,13 @@ export default function ArticleDashboard() {
   const handleDelete = async (id: number) => {
     const token = localStorage.getItem("auth");
     try {
-      const res = await fetch(
-        `http://localhost:3000/api/article/id/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      const res = await fetch(`http://localhost:3000/api/article/id/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-      );
+      });
 
       // error handling
       if (!res.ok) {
@@ -70,11 +67,11 @@ export default function ArticleDashboard() {
       }
 
       // running get shop data again to refresh data without refreshing all page
-      getArticleData()
+      getArticleData();
     } catch (err) {
       console.error(err);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col md:flex-row min-h-dvh bg-[#FFFFFF]">
