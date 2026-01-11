@@ -1,9 +1,10 @@
 "use client";
 import { useEffect, useState } from "react";
 import { timeFormatter } from "@/libs/timeFormatterToID";
-import Link from "next/link"; // Opsional: Untuk navigasi ke detail
+import Link from "next/link";
+import { getShopItemImages } from "@/libs/presignedDownloadHelper";
+import formatRupiah from "@/libs/rupiahFormat";
 
-// 1. Definisi Tipe Data sesuai Schema Prisma
 interface ShopItem {
   createdAt: string;
   name: string;
@@ -11,32 +12,34 @@ interface ShopItem {
   slug: string;
   contact: string;
   description: string;
-  imagesUrl: string[]; // Map dari database column "images"
+  imagesUrl: string[];
 }
 
 export default function Page() {
   const [shopItems, setShopItems] = useState<ShopItem[]>([]);
+  const [imgArr, setImgArr] = useState<string[]>([]);
+  const [imgDownloadArr, setImgDownloadArr] = useState<(string | null)[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getShopData();
   }, []);
 
-  // Helper untuk format Rupiah
-  const formatRupiah = (number: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      minimumFractionDigits: 0,
-    }).format(number);
-  };
+  useEffect(() => {
+    if (imgArr.length === 0) return;
+
+    const getPresigned = async () => {
+      const url = await getShopItemImages(imgArr)
+      setImgDownloadArr(url)
+    }
+    getPresigned()
+  }, [imgArr]);
 
   const getShopData = async () => {
     setIsLoading(true);
     const token = localStorage.getItem("auth");
 
     try {
-      // Catatan: Pastikan URL API sudah benar
       const res = await fetch(
         "http://localhost:3000/api/shopitem/client?page=1&limit=10",
         {
@@ -54,6 +57,11 @@ export default function Page() {
         throw new Error(data.message || "Gagal mengambil data");
       }
 
+      // mapping ke seluruh item image url untuk dibuatkan presigneddownload
+      const collectedImages = data.data.map((item: any) => item.imagesUrl[0]);
+      setImgArr(collectedImages);
+
+      // getShopItemImages(data.data.)
       setShopItems(data.data);
     } catch (err) {
       console.error("Fetch Error:", err);
@@ -78,7 +86,7 @@ export default function Page() {
       {/* Grid Layout untuk Card */}
       {!isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {shopItems.map((item) => (
+          {shopItems.map((item, i) => (
             <div
               key={item.slug}
               className="group bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col"
@@ -87,7 +95,7 @@ export default function Page() {
               <div className="relative aspect-square bg-gray-100 overflow-hidden">
                 {item.imagesUrl && item.imagesUrl.length > 0 ? (
                   <img
-                    src={item.imagesUrl[0]}
+                    src={imgDownloadArr[i]!}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                   />
