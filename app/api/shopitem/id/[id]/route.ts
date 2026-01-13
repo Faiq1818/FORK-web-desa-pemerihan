@@ -1,9 +1,9 @@
 import prisma from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
-import { validateBody } from "@/libs/requestHelper";
-import { validateJwtAuthHelper } from "@/libs/authHelper";
-import { generateSlug } from "@/libs/generateSlugHelper";
+import { validateBody } from "@/helpers/requestHelper";
+import { validateJwtAuthHelper } from "@/helpers/authHelper";
+import { generateSlug } from "@/helpers/generateSlugHelper";
 
 const MAX_IMAGES = 5;
 

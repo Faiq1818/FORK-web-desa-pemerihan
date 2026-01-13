@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { AUTH_CONFIG } from "@/libs/JWTConfig";
+import { AUTH_CONFIG } from "@/libs/config/JWTConfig";
 
 type ValidationError = {
   message: string;
