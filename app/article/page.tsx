@@ -4,7 +4,10 @@ import { Calendar, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { getShopItemImages } from "@/libs/presignedDownloadHelper";
 import { useSearchParams, usePathname } from "next/navigation";
-import { createPageUrl, generatePagination } from "@/libs/pageNumberingUiHelper";
+import {
+  createPageUrl,
+  generatePagination,
+} from "@/libs/pageNumberingUiHelper";
 
 type PaginationMeta = {
   currentPage: number;
@@ -78,7 +81,7 @@ export default function Page() {
   };
 
   const paginationList = generatePagination(meta.currentPage, meta.totalPages);
-  console.log(paginationList)
+  console.log(paginationList);
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-white to-green-50/30">
@@ -155,10 +158,11 @@ export default function Page() {
                   <Link
                     key={pageNum}
                     href={createPageUrl(pageNum, searchParams, pathname)}
-                    className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${pageNum === page
-                      ? "bg-[#2D5A27] text-white border-[#2D5A27]"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                      }`}
+                    className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${
+                      pageNum === page
+                        ? "bg-[#2D5A27] text-white border-[#2D5A27]"
+                        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    }`}
                   >
                     {pageNum}
                   </Link>
@@ -169,10 +173,11 @@ export default function Page() {
             <Link
               href={createPageUrl(page + 1, searchParams, pathname)}
               prefetch={false}
-              className={`p-2 rounded-lg border ${page >= meta.totalPages
-                ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
-                : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
-                }`}
+              className={`p-2 rounded-lg border ${
+                page >= meta.totalPages
+                  ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
+                  : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
+              }`}
               aria-disabled={page >= meta.totalPages}
             >
               <ChevronRight className="w-5 h-5" />

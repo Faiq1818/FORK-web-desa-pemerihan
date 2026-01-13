@@ -43,7 +43,11 @@ export const generatePagination = (currentPage: number, totalPages: number) => {
   return [];
 };
 
-export const createPageUrl = (newPage: number | string, searchParams: any, pathname: any) => {
+export const createPageUrl = (
+  newPage: number | string,
+  searchParams: any,
+  pathname: any,
+) => {
   const params = new URLSearchParams(searchParams);
   params.set("page", newPage.toString());
   return `${pathname}?${params.toString()}`;
