@@ -4,7 +4,7 @@ import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
 import jwt from "jsonwebtoken";
 import { AUTH_CONFIG } from "@/libs/config/JWTConfig";
-import { validateBody } from "@/libs/requestHelper";
+import { validateBody } from "@/helper/requestHelper";
 
 const User = z.object({
   username: z.string().min(5),

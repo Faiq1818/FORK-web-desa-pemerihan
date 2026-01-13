@@ -1,4 +1,4 @@
-import { validateBody } from "@/libs/requestHelper";
+import { validateBody } from "@/helper/requestHelper";
 import { validateJwtAuthHelper } from "@/helper/authHelper";
 import * as z from "zod";
 import { JwtPayload } from "jsonwebtoken";

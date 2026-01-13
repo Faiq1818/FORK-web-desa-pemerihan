@@ -2,7 +2,7 @@ import prisma from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
 import { JwtPayload } from "jsonwebtoken";
-import { validateBody } from "@/libs/requestHelper";
+import { validateBody } from "@/helper/requestHelper";
 import { validateJwtAuthHelper } from "@/helper/authHelper";
 import { generateSlug } from "@/helper/generateSlugHelper";
 
