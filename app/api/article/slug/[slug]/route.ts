@@ -1,6 +1,6 @@
 import prisma from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
-import { slugSchema } from "@/helper/strValidatorHelper";
+import { slugSchema } from "@/helpers/strValidatorHelper";
 
 export async function GET(
   _request: Request,

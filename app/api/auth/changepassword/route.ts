@@ -1,7 +1,7 @@
 import bcrypt from "bcryptjs";
 import prisma from "@/libs/prisma";
 import * as z from "zod";
-import { validateBody } from "@/helper/requestHelper";
+import { validateBody } from "@/helpers/requestHelper";
 
 // zod type validation
 const fromRequest = z.object({

@@ -4,7 +4,7 @@ import DashboardSidebar from "@/ui/dashboardSidebar";
 import { MdAddBusiness } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { CiTrash } from "react-icons/ci";
-import { timeFormatter } from "@/helper/timeFormatterToID";
+import { timeFormatter } from "@/helpers/timeFormatterToID";
 import { RiExpandDiagonalLine } from "react-icons/ri";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { useRouter } from "next/navigation";

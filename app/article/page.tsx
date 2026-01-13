@@ -2,12 +2,12 @@
 import Link from "next/link";
 import { Calendar, ChevronRight } from "lucide-react";
 import { useEffect, useState } from "react";
-import { getShopItemImages } from "@/helper/presignedDownloadHelper";
+import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
 import { useSearchParams, usePathname } from "next/navigation";
 import {
   createPageUrl,
   generatePagination,
-} from "@/helper/pageNumberingUiHelper";
+} from "@/helpers/pageNumberingUiHelper";
 
 type PaginationMeta = {
   currentPage: number;
