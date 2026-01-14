@@ -1,33 +1,78 @@
+"use client";
+
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useState, useEffect } from "react";
+import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
+
+interface Article {
+  title: string;
+  date: string;
+  image: string;
+  category: string;
+  excerpt: string;
+  slug: string;
+}
 
 export default function HomePage() {
-  // News/Articles
-  const newsArticles = [
-    {
-      title: "Pelatihan Pembuatan Batik untuk Ibu-Ibu PKK Desa Sejahtera",
-      date: "12 Desember 2024",
-      image:
-        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=400&auto=format&fit=crop",
-      category: "UMKM",
-      excerpt: "Program pemberdayaan masyarakat melalui pelatihan batik...",
-    },
-    {
-      title: "Workshop Urban Farming di Sawah Desa",
-      date: "10 Desember 2024",
-      image:
-        "https://images.unsplash.com/photo-1530836369250-ef72a3f5cda8?w=400&auto=format&fit=crop",
-      category: "Pertanian",
-      excerpt: "Pelatihan bertani modern untuk meningkatkan hasil panen...",
-    },
-    {
-      title: "Festival Kuliner dan Promosi UMKM Lokal",
-      date: "8 Desember 2024",
-      image:
-        "https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=400&auto=format&fit=crop",
-      category: "Event",
-      excerpt: "Promosi produk lokal dalam festival kuliner desa...",
-    },
-  ];
+  const [newsArticles, setNewsArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [imgArr, setImgArr] = useState<string[]>([]);
+  const [imgDownloadArr, setImgDownloadArr] = useState<(string | null)[]>([]);
+
+  // Fetch presigned URLs for images
+  useEffect(() => {
+    if (imgArr.length === 0) return;
+
+    const getPresigned = async () => {
+      const url = await getShopItemImages(imgArr);
+      setImgDownloadArr(url);
+    };
+    getPresigned();
+  }, [imgArr]);
+
+  // Fetch articles from API
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const response = await fetch("/api/article/client?page=1&limit=3");
+        const result = await response.json();
+
+        if (result.success && result.data) {
+          const collectedImages = result.data.map(
+            (article: any) => article.featuredImageUrl,
+          );
+          setImgArr(collectedImages);
+
+          const parsedArticles = result.data.map((article: any) => ({
+            title: article.title,
+            date: new Date(article.createdAt).toLocaleDateString("id-ID", {
+              day: "numeric",
+              month: "long",
+              year: "numeric",
+            }),
+            image: article.featuredImageUrl,
+            category: "Berita",
+            excerpt: stripHtml(article.content).substring(0, 100) + "...",
+            slug: article.slug,
+          }));
+          setNewsArticles(parsedArticles);
+        }
+      } catch (error) {
+        console.error("Error fetching articles:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArticles();
+  }, []);
+
+  // Helper function to strip HTML tags
+  function stripHtml(html: string): string {
+    const tmp = document.createElement("div");
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || "";
+  }
 
   return (
     <div className="min-h-screen bg-white">
@@ -409,42 +454,53 @@ export default function HomePage() {
             kepentingan bersama
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {newsArticles.map((article, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
-              >
-                <div className="relative">
-                  <span className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full z-10">
-                    {article.category}
-                  </span>
-                  <img
-                    src={article.image}
-                    alt={article.title}
-                    className="w-full h-48 object-cover"
-                  />
-                </div>
-                <div className="p-6">
-                  <div className="text-sm text-gray-500 mb-2">
-                    {article.date}
+          {isLoading ? (
+            <div className="text-center py-12">
+              <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-green-600 border-r-transparent"></div>
+              <p className="text-gray-600 mt-4">Memuat berita...</p>
+            </div>
+          ) : newsArticles.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Belum ada berita tersedia</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {newsArticles.map((article, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition-shadow"
+                >
+                  <div className="relative">
+                    <span className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-bold px-3 py-1 rounded-full z-10">
+                      {article.category}
+                    </span>
+                    <img
+                      src={imgDownloadArr[index] || article.image}
+                      alt={article.title}
+                      className="w-full h-48 object-cover"
+                    />
                   </div>
-                  <h4 className="font-bold text-gray-800 mb-3 line-clamp-2">
-                    {article.title}
-                  </h4>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                    {article.excerpt}
-                  </p>
-                  <a
-                    href="#"
-                    className="text-green-600 font-semibold text-sm hover:text-green-700 inline-flex items-center gap-1"
-                  >
-                    Baca Selengkapnya →
-                  </a>
+                  <div className="p-6">
+                    <div className="text-sm text-gray-500 mb-2">
+                      {article.date}
+                    </div>
+                    <h4 className="font-bold text-gray-800 mb-3 line-clamp-2">
+                      {article.title}
+                    </h4>
+                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                      {article.excerpt}
+                    </p>
+                    <a
+                      href={`/article/${article.slug}`}
+                      className="text-green-600 font-semibold text-sm hover:text-green-700 inline-flex items-center gap-1"
+                    >
+                      Baca Selengkapnya →
+                    </a>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
 
           <div className="text-center mt-12">
             <button className="bg-amber-600 text-white font-semibold px-8 py-3 rounded-full hover:bg-amber-700 transition">

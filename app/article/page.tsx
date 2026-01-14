@@ -42,6 +42,7 @@ export default function Page() {
     };
     getPresigned();
   }, [imgArr]);
+  console.log(imgDownloadArr);
 
   const getShopData = async () => {
     const token = localStorage.getItem("auth");
