@@ -34,7 +34,7 @@ model Article {
 model ShopItems {
   id        Int      @id @default(autoincrement())
   createdAt DateTime @default(now())
-  name      String   @unique
+  name      String
   price     Int
   slug      String   @unique
   contact   String
