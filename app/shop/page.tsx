@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import Link from "next/link";
 import {
   createPageUrl,
@@ -26,7 +26,7 @@ type PaginationMeta = {
   totalItems: number;
 };
 
-export default function Page() {
+function ShopContent() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const page = Number(searchParams.get("page")) || 1;
@@ -74,13 +74,10 @@ export default function Page() {
         throw new Error(data.message || "Gagal mengambil data");
       }
 
-      // mapping ke seluruh item image url untuk dibuatkan presigneddownload
       const collectedImages = data.data.map(
         (item: ShopItem) => item.imagesUrl[0],
       );
       setImgArr(collectedImages);
-
-      // getShopItemImages(data.data.)
       setShopItems(data.data);
 
       if (data.meta) {
@@ -99,78 +96,71 @@ export default function Page() {
 
   const paginationList = generatePagination(meta.currentPage, meta.totalPages);
 
+  // Jika sedang loading data API (Client Side Fetching)
+  if (isLoading) {
+    return <ShopListSkeleton />;
+  }
+
+  // Jika data kosong
+  if (!isLoading && shopItems.length === 0) {
+    return (
+      <div className="text-center py-10 text-gray-500">
+        Belum ada produk yang tersedia.
+      </div>
+    );
+  }
+
   return (
-    <div className="container max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Daftar Produk</h1>
-
-      {/* Loading State Skeleton (Sederhana) */}
-      {isLoading && (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
-          {[...Array(4)].map((_, i) => (
-            <div key={i} className="h-64 bg-gray-200 rounded-xl"></div>
-          ))}
-        </div>
-      )}
-
+    <>
       {/* Grid Layout untuk Card */}
-      {!isLoading && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-16">
-          {shopItems.map((item, i) => (
-            <div
-              key={item.slug}
-              className="group bg-white transition-all duration-300 overflow-hidden flex flex-col"
-            >
-              {/* Action Button */}
-              <Link
-                href={`/shop/${item.slug}`} // Sesuaikan dengan routing detail page Anda
-              >
-                {/* Bagian Image - Mengambil index 0 */}
-                <div className="relative aspect-square rounded-xl bg-gray-100 overflow-hidden">
-                  {item.imagesUrl && item.imagesUrl.length > 0 ? (
-                    <img
-                      src={imgDownloadArr[i]!}
-                      alt={item.name}
-                      className="w-full h-full hover:rounded-xl object-cover group-hover:scale-105 transition-transform duration-100"
-                    />
-                  ) : (
-                    // Fallback jika tidak ada gambar
-                    <div className="flex items-center justify-center w-full h-full text-gray-400">
-                      <span className="text-sm">No Image</span>
-                    </div>
-                  )}
-                </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-16">
+        {shopItems.map((item, i) => (
+          <div
+            key={item.slug}
+            className="group bg-white transition-all duration-300 overflow-hidden flex flex-col"
+          >
+            <Link href={`/shop/${item.slug}`}>
+              {/* Bagian Image */}
+              <div className="relative aspect-square rounded-xl bg-gray-100 overflow-hidden">
+                {item.imagesUrl && item.imagesUrl.length > 0 ? (
+                  <img
+                    src={imgDownloadArr[i] || ""} // Handle null safely
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100"
+                  />
+                ) : (
+                  <div className="flex items-center justify-center w-full h-full text-gray-400">
+                    <span className="text-sm">No Image</span>
+                  </div>
+                )}
+              </div>
 
-                {/* Bagian Konten */}
-                <div className="py-4 px-2 flex flex-col flex-grow">
-                  {/* Nama Produk (Truncate jika terlalu panjang) */}
-                  <h3
-                    className="font-medium text-gray-800 mb-1 truncate"
-                    title={item.name}
-                  >
-                    {item.name}
-                  </h3>
+              {/* Bagian Konten */}
+              <div className="py-4 px-2 flex flex-col flex-grow">
+                <h3
+                  className="font-medium text-gray-800 mb-1 truncate"
+                  title={item.name}
+                >
+                  {item.name}
+                </h3>
 
-                  {/* Harga */}
-                  <p className="font-bold text-lg mb-2">
-                    {formatRupiah(item.price)}
-                  </p>
+                <p className="font-bold text-lg mb-2">
+                  {formatRupiah(item.price)}
+                </p>
 
-                  {/* Deskripsi Singkat */}
-                  <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">
-                    {item.description}
-                  </p>
-                </div>
-              </Link>
-            </div>
-          ))}
-        </div>
-      )}
+                <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-grow">
+                  {item.description}
+                </p>
+              </div>
+            </Link>
+          </div>
+        ))}
+      </div>
 
-      {/* Nomor Halaman dengan Logic Ellipsis dan tombol next */}
+      {/* Pagination */}
       <div className="flex justify-center mt-5 gap-1">
         <div className="flex gap-1">
           {paginationList.map((pageNum, index) => {
-            // Render Ellipsis (Titik-titik)
             if (pageNum === "...") {
               return (
                 <span
@@ -181,8 +171,6 @@ export default function Page() {
                 </span>
               );
             }
-
-            // Render Angka Halaman (Link)
             return (
               <Link
                 key={pageNum}
@@ -212,13 +200,30 @@ export default function Page() {
           <ChevronRight className="w-5 h-5" />
         </Link>
       </div>
+    </>
+  );
+}
 
-      {/* Empty State */}
-      {!isLoading && shopItems.length === 0 && (
-        <div className="text-center py-10 text-gray-500">
-          Belum ada produk yang tersedia.
-        </div>
-      )}
+export default function Page() {
+  return (
+    <div className="container max-w-7xl mx-auto px-4 py-8">
+      {/* Judul Render Langsung (Static) */}
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Daftar Produk</h1>
+
+      {/* Konten Dinamis (Wrapped in Suspense) */}
+      <Suspense fallback={<ShopListSkeleton />}>
+        <ShopContent />
+      </Suspense>
+    </div>
+  );
+}
+
+function ShopListSkeleton() {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="h-64 bg-gray-200 rounded-xl"></div>
+      ))}
     </div>
   );
 }

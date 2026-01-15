@@ -1,8 +1,7 @@
 "use client";
-
 import Link from "next/link";
 import { Calendar, ChevronRight } from "lucide-react";
-import { useEffect, useState, Suspense } from "react"
+import { useEffect, useState, Suspense } from "react";
 import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
 import { useSearchParams, usePathname } from "next/navigation";
 import {
@@ -70,7 +69,7 @@ function ArticleContent() {
       }
 
       const collectedImages = data.data.map(
-        (item: Article) => item.featuredImageUrl
+        (item: Article) => item.featuredImageUrl,
       );
       setImgArr(collectedImages);
       setArticle(data.data);
@@ -131,7 +130,7 @@ function ArticleContent() {
                                 day: "numeric",
                                 month: "long",
                                 year: "numeric",
-                              }
+                              },
                             )}
                           </span>
                         </div>
@@ -202,7 +201,7 @@ export default function Page() {
       <div className="flex justify-center mt-5 pb-5 text-2xl border-b border-slate-200 mx-5">
         <h1>Artikel</h1>
       </div>
-      
+
       {/* Bungkus komponen yang menggunakan useSearchParams dengan Suspense, nextjs things lol */}
       <Suspense fallback={<ArticleListSkeleton />}>
         <ArticleContent />
@@ -216,7 +215,10 @@ function ArticleListSkeleton() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
       <div className="animate-pulse space-y-6">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="bg-white h-64 w-full border border-gray-200" />
+          <div
+            key={i}
+            className="bg-white h-64 w-full border border-gray-200"
+          />
         ))}
       </div>
       <div className="text-center mt-5 text-gray-500">Memuat artikel...</div>
