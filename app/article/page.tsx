@@ -21,6 +21,7 @@ interface Article {
   title: string;
   slug: string;
   featuredImageUrl: string;
+  shortDescription: string;
   content: string;
 }
 
@@ -136,8 +137,8 @@ function ArticleContent() {
                         </div>
                       </div>
 
-                      <p className="text-gray-700 leading-relaxed mb-4 line-clamp-2">
-                        {article.content}
+                      <p className="text-gray-700 leading-relaxed mb-4 line-clamp-4">
+                        {article.shortDescription}
                       </p>
                     </div>
                   </div>

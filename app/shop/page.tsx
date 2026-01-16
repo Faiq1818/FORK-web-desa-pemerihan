@@ -122,15 +122,15 @@ function ShopContent() {
             <Link href={`/shop/${item.slug}`}>
               {/* Bagian Image */}
               <div className="relative aspect-square rounded-xl bg-gray-100 overflow-hidden">
-                {item.imagesUrl && item.imagesUrl.length > 0 ? (
+                {imgDownloadArr[i] ? (
                   <img
-                    src={imgDownloadArr[i] || ""} // Handle null safely
+                    src={imgDownloadArr[i]}
                     alt={item.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100"
                   />
                 ) : (
                   <div className="flex items-center justify-center w-full h-full text-gray-400">
-                    <span className="text-sm">No Image</span>
+                    <span className="text-sm">Loading...</span>
                   </div>
                 )}
               </div>
