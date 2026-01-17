@@ -54,10 +54,12 @@ export default async function Page({
               <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
                 <p className="text-sm text-gray-500 mb-1">Hubungi Penjual:</p>
                 <p className="text-lg font-semibold text-gray-800 break-all">
-                  {shopItem.contact}
+                  {shopItem.owner}
                 </p>
-
-                <WhatsAppButton shopItem={shopItem}/>
+                <p className="text-lg font-semibold text-gray-600 break-all">
+                  +{shopItem.contact}
+                </p>
+                <WhatsAppButton shopItem={shopItem} />
               </div>
             </div>
 
