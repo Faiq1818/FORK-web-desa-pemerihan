@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
+import Link from "next/link";
 
 interface Article {
   title: string;
@@ -10,6 +11,7 @@ interface Article {
   excerpt: string;
   slug: string;
   featuredImageUrl: string;
+  shortDescription: string;
   createdAt: string;
   content: string;
 }
@@ -63,6 +65,7 @@ export default function NewsSection() {
             category: "Berita",
             excerpt: stripHtml(article.content).substring(0, 100) + "...",
             slug: article.slug,
+            shortDescription: article.shortDescription
           }));
           setNewsArticles(parsedArticles);
         }
@@ -75,6 +78,8 @@ export default function NewsSection() {
 
     fetchArticles();
   }, []);
+
+  console.log(newsArticles)
   return (
     <>
       {/* Kabar Desa (News) */}
@@ -102,32 +107,30 @@ export default function NewsSection() {
               {newsArticles.map((article, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl cursor-pointer border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <div className="relative">
-                    <img
-                      src={imgDownloadArr[index] || article.image}
-                      alt={article.title}
-                      className="w-full h-48 object-cover"
-                    />
-                  </div>
-                  <div className="p-6">
-                    <div className="text-sm text-gray-500 mb-2">
-                      {article.date}
+                  <Link
+                    href={`/article/${article.slug}`}
+                  >
+                    <div className="relative">
+                      <img
+                        src={imgDownloadArr[index] || article.image}
+                        alt={article.title}
+                        className="w-full h-48 object-cover"
+                      />
                     </div>
-                    <h4 className="font-bold text-gray-800 mb-3 line-clamp-2">
-                      {article.title}
-                    </h4>
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      {article.excerpt}
-                    </p>
-                    <a
-                      href={`/article/${article.slug}`}
-                      className="text-yellow-600 font-semibold text-sm hover:text-green-700 inline-flex items-center gap-1"
-                    >
-                      Baca Selengkapnya →
-                    </a>
-                  </div>
+                    <div className="p-6">
+                      <div className="text-sm text-gray-500 mb-2">
+                        {article.date}
+                      </div>
+                      <h4 className="font-bold text-gray-800 mb-3 line-clamp-2">
+                        {article.title}
+                      </h4>
+                      <p className="text-gray-600 text-sm line-clamp-3">
+                        {article.shortDescription}
+                      </p>
+                    </div>
+                  </Link>
                 </div>
               ))}
             </div>
@@ -139,7 +142,7 @@ export default function NewsSection() {
             </button>
           </div>
         </div>
-      </section>
+      </section >
 
     </>
   )

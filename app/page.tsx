@@ -64,28 +64,6 @@ export default function HomePage() {
                   dan pengrajin.
                 </p>
               </div>
-
-              {/* Statistics */}
-              <div className="grid grid-cols-3 gap-6 pt-4">
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold text-amber-700 mb-1">
-                    3,500
-                  </div>
-                  <div className="text-sm text-gray-600">Penduduk</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold text-amber-700 mb-1">
-                    1,250
-                  </div>
-                  <div className="text-sm text-gray-600">Hektar</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-4xl md:text-5xl font-bold text-amber-700 mb-1">
-                    45+
-                  </div>
-                  <div className="text-sm text-gray-600">UMKM</div>
-                </div>
-              </div>
             </div>
 
             {/* Right Column - Image */}
@@ -96,22 +74,6 @@ export default function HomePage() {
                   alt="Rumah Adat Desa Pemerihan"
                   className="w-full h-auto object-cover"
                 />
-                {/* Badge Overlay */}
-                <div className="absolute bottom-6 left-6 right-6">
-                  <div className="bg-yellow-400 rounded-xl p-4 shadow-lg flex items-center gap-3">
-                    <div className="w-10 h-10 bg-amber-700 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-2xl">🏆</span>
-                    </div>
-                    <div>
-                      <div className="font-bold text-gray-900 text-sm md:text-base">
-                        Desa Terbaik 2023
-                      </div>
-                      <div className="text-xs text-gray-700">
-                        Kabupaten Makmur
-                      </div>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </div>
@@ -317,50 +279,10 @@ export default function HomePage() {
             <div className="p-6 text-center bg-gradient-to-r from-green-600 to-green-700 text-white">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <MapPin className="w-5 h-5" />
-                <h3 className="text-xl font-bold">Desa Sejahtera</h3>
+                <h3 className="text-xl font-bold">Desa Pemerihan</h3>
               </div>
               <p className="text-green-100">
-                Bengkunat Belimbing, Kabupaten Pesisir Barat
-              </p>
-              <div className="mt-4 text-sm text-green-100">
-                📍 Lampung 123-45678
-              </div>
-            </div>
-          </div>
-
-          {/* Contact Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-white rounded-xl p-6 shadow-md text-center">
-              <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-6 h-6 text-green-700" />
-              </div>
-              <h4 className="font-bold text-gray-800 mb-2">Alamat Kantor</h4>
-              <p className="text-gray-600 text-sm">
-                Jl. Desa Sejahtera No.123, Kec. Matus, Jawa Timur
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-md text-center">
-              <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Phone className="w-6 h-6 text-blue-700" />
-              </div>
-              <h4 className="font-bold text-gray-800 mb-2">Telepon</h4>
-              <p className="text-gray-600 text-sm">
-                Tlpn: +62123456789
-                <br />
-                Fax: +62123456789
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-md text-center">
-              <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-6 h-6 text-orange-700" />
-              </div>
-              <h4 className="font-bold text-gray-800 mb-2">Email</h4>
-              <p className="text-gray-600 text-sm">
-                Senin - Jumat : 08:00 - 16:00
-                <br />
-                Sabtu : 08:00 - 12:00
+                Kecamatan Bengkunat, Kabupaten Pesisir Barat, Provinsi Lampung
               </p>
             </div>
           </div>
