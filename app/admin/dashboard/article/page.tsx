@@ -2,7 +2,7 @@
 import Link from "next/link";
 import DashboardSidebar from "@/components/nonShared/dashboardSidebar";
 import { PiArticleMedium } from "react-icons/pi";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { CiTrash } from "react-icons/ci";
 import { MdOutlineModeEdit } from "react-icons/md";
 import { timeFormatter } from "@/helpers/timeFormatterToID";
@@ -23,7 +23,7 @@ interface Article {
   content: string;
 }
 
-export default function ArticleDashboard() {
+function ArticleDashboard() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   // const [articles, setArticles] = useState<any>([]);
@@ -131,7 +131,7 @@ export default function ArticleDashboard() {
             Belum ada artikel di halaman ini.
           </div>
         ) : (
-          articles.map((article: any) => (
+          articles.map((article) => (
             <div key={article.id} className="flex flex-col gap-4 mb-5">
               <div className="border border-[#ACACAF] rounded-2xl px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -217,5 +217,13 @@ export default function ArticleDashboard() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+      <Suspense>
+        <ArticleDashboard />
+      </Suspense>
   );
 }

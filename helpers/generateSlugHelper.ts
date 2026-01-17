@@ -1,5 +1,5 @@
 export const generateSlug = (text: string) => {
-  let date = Date.now();
+  const date = Date.now();
   const newSlugPrefix = text
     .toString()
     .toLowerCase()

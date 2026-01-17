@@ -2,7 +2,7 @@
 import Link from "next/link";
 import DashboardSidebar from "@/components/nonShared/dashboardSidebar";
 import { MdAddBusiness } from "react-icons/md";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { CiTrash } from "react-icons/ci";
 import { timeFormatter } from "@/helpers/timeFormatterToID";
 import { RiExpandDiagonalLine } from "react-icons/ri";
@@ -24,7 +24,7 @@ interface ShopItem {
   imagesUrl: [];
 }
 
-export default function Page() {
+function ShopDashboard() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   // const [shopItem, setShopItem] = useState<any>([]);
@@ -144,7 +144,7 @@ export default function Page() {
             Belum ada produk di halaman ini.
           </div>
         ) : (
-          shopItem.map((item: any) => (
+          shopItem.map((item) => (
             <div key={item.id} className="flex flex-col gap-4 mb-5">
               <div className="border border-[#ACACAF] rounded-2xl px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                 <div>
@@ -230,5 +230,13 @@ export default function Page() {
         </div>
       </main>
     </div>
+  );
+}
+
+export default function Page() {
+  return (
+      <Suspense>
+        <ShopDashboard />
+      </Suspense>
   );
 }
