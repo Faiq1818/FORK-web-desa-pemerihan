@@ -15,8 +15,8 @@ export default function ClientLayout({
   // [KONFIGURASI] Daftar rute yang TIDAK ingin menampilkan Header & Footer
   // Contoh: Halaman login, register, atau halaman error khusus
   const disableLayout = [
-    "/auth/login", 
-    "/auth/register", 
+    "/auth/login",
+    "/auth/register",
     "/admin/dashboard",
     "/admin/dashboard/accounts",
     "/admin/dashboard/article",
@@ -37,12 +37,12 @@ export default function ClientLayout({
     <>
       {/* Tampilkan Header HANYA jika tidak di-disable */}
       {!isLayoutDisabled && <Header />}
-      
+
       {/* Konten utama halaman (Page) selalu dirender */}
       {children}
 
       {/* Tampilkan Footer HANYA jika tidak di-disable */}
-      { <Footer />}
+      {<Footer />}
     </>
   );
 }

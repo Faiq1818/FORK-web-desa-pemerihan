@@ -27,7 +27,6 @@ interface ShopItem {
 function ShopDashboard() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  // const [shopItem, setShopItem] = useState<any>([]);
   const [shopItem, setShopItem] = useState<ShopItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [meta, setMeta] = useState({
@@ -36,7 +35,6 @@ function ShopDashboard() {
     totalItems: 0,
   });
 
-  const [errorMsg, setErrorMsg] = useState("");
   const router = useRouter();
   const page = Number(searchParams.get("page")) || 1;
 
@@ -89,8 +87,6 @@ function ShopDashboard() {
           return;
         }
       }
-
-      setErrorMsg(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -129,7 +125,7 @@ function ShopDashboard() {
         <div className="font-bold text-4xl text-[#333446] mb-6">Toko</div>
 
         <div className="mb-6 flex">
-          <Link prefetch={false} href="/admin/dashboard/shop/addItem">
+          <Link prefetch={false} href="/admin/dashboard/shop/additem">
             <span className="flex items-center gap-2 rounded-2xl py-2 px-4 bg-[#F0F0F0] text-[#333446] font-bold cursor-pointer hover:bg-[#ACADAD] text-sm transition-colors">
               <MdAddBusiness className="text-xl" />
               Tambah Barang di Toko

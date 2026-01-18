@@ -3,7 +3,7 @@ import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 
 // [TAMBAH] Import ClientLayout yang baru dibuat
-import ClientLayout from "@/components/shared/ClientLayout"; 
+import ClientLayout from "@/components/shared/ClientLayout";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -30,9 +30,7 @@ export default function RootLayout({
       <body className={`${inter.variable} ${montserrat.variable} antialiased`}>
         {/* [UBAH] Gunakan ClientLayout untuk membungkus children */}
         {/* Header dan Footer sekarang diatur di dalam ClientLayout */}
-        <ClientLayout>
-          {children}
-        </ClientLayout>
+        <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
   );
