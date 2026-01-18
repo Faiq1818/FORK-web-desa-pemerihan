@@ -22,7 +22,6 @@ export default function NewsSection() {
   const [imgArr, setImgArr] = useState<string[]>([]);
   const [imgDownloadArr, setImgDownloadArr] = useState<(string | null)[]>([]);
 
-
   // Helper function to strip HTML tags
   function stripHtml(html: string): string {
     const tmp = document.createElement("div");
@@ -65,7 +64,7 @@ export default function NewsSection() {
             category: "Berita",
             excerpt: stripHtml(article.content).substring(0, 100) + "...",
             slug: article.slug,
-            shortDescription: article.shortDescription
+            shortDescription: article.shortDescription,
           }));
           setNewsArticles(parsedArticles);
         }
@@ -79,7 +78,7 @@ export default function NewsSection() {
     fetchArticles();
   }, []);
 
-  console.log(newsArticles)
+  console.log(newsArticles);
   return (
     <>
       {/* Kabar Desa (News) */}
@@ -109,9 +108,7 @@ export default function NewsSection() {
                   key={index}
                   className="bg-white rounded-xl cursor-pointer border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
                 >
-                  <Link
-                    href={`/article/${article.slug}`}
-                  >
+                  <Link href={`/article/${article.slug}`}>
                     <div className="relative">
                       <img
                         src={imgDownloadArr[index] || article.image}
@@ -142,8 +139,7 @@ export default function NewsSection() {
             </button>
           </div>
         </div>
-      </section >
-
+      </section>
     </>
-  )
+  );
 }

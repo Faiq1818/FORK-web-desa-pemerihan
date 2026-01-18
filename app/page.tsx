@@ -250,7 +250,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <NewsSection/>
+      <NewsSection />
 
       {/* Lokasi Desa */}
       <section id="contact" className="py-16 md:py-24 bg-gray-50">
