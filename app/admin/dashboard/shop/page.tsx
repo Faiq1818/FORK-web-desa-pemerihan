@@ -26,7 +26,10 @@ interface ShopItem {
 
 function ShopDashboard() {
   const searchParams = useSearchParams();
+  const router = useRouter();
+  const page = Number(searchParams.get("page")) || 1;
   const pathname = usePathname();
+
   const [shopItem, setShopItem] = useState<ShopItem[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [meta, setMeta] = useState({
@@ -35,12 +38,15 @@ function ShopDashboard() {
     totalItems: 0,
   });
 
-  const router = useRouter();
-  const page = Number(searchParams.get("page")) || 1;
+  const [isEditPopup, setIsEditPopup] = useState<boolean>(false);
+  const [productName, setProductName] = useState<string>("");
+  const [deleteId, setDeleteId] = useState<number>();
 
   useEffect(() => {
     getShopData();
   }, [page]);
+
+  const paginationList = generatePagination(meta.currentPage, meta.totalPages);
 
   const getShopData = async () => {
     setIsLoading(true);
@@ -115,8 +121,6 @@ function ShopDashboard() {
     }
   };
 
-  const paginationList = generatePagination(meta.currentPage, meta.totalPages);
-
   return (
     <div className="flex flex-col md:flex-row min-h-dvh bg-white">
       <DashboardSidebar />
@@ -170,7 +174,7 @@ function ShopDashboard() {
                   </Link>
                   <button
                     className="px-3 py-1 text-xl text-[#e64553] hover:bg-red-50 rounded"
-                    onClick={() => handleDelete(item.id)}
+                    onClick={() => { setIsEditPopup(true); setProductName(item.name); setDeleteId(item.id) }}
                   >
                     <CiTrash />
                   </button>
@@ -199,11 +203,10 @@ function ShopDashboard() {
                 <Link
                   key={pageNum}
                   href={createPageUrl(pageNum, searchParams, pathname)}
-                  className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${
-                    pageNum === page
-                      ? "bg-yellow-400 text-gray-700 border-yellow-400"
-                      : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                  }`}
+                  className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${pageNum === page
+                    ? "bg-yellow-400 text-gray-700 border-yellow-400"
+                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
+                    }`}
                 >
                   {pageNum}
                 </Link>
@@ -214,17 +217,41 @@ function ShopDashboard() {
           <Link
             href={createPageUrl(page + 1, searchParams, pathname)}
             prefetch={false}
-            className={`p-2 rounded-lg border ${
-              page >= meta.totalPages
-                ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
-                : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
-            }`}
+            className={`p-2 rounded-lg border ${page >= meta.totalPages
+              ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
+              : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
+              }`}
             aria-disabled={page >= meta.totalPages}
           >
             <ChevronRight className="w-5 h-5" />
           </Link>
         </div>
       </main>
+
+      {/* Delete Popup */}
+      {isEditPopup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white w-full max-w-md rounded-2xl p-6 shadow-xl">
+            <div className="font-bold text-xl mb-1">
+              Apakah anda yakin untuk menghapus barang {productName}
+            </div>
+            <div className="flex justify-end gap-2 mt-6">
+              <button
+                className="px-4 py-2 rounded-xl border border-slate-300 text-sm hover:bg-gray-100"
+                onClick={() => setIsEditPopup(false)}
+              >
+                Batal
+              </button>
+              <button
+                className="px-4 py-2 rounded-xl bg-yellow-400 text-gray-800 font-medium hover:bg-yellow-500"
+                onClick={() => { handleDelete(deleteId!); setIsEditPopup(false) }}
+              >
+                Hapus
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

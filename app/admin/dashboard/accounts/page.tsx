@@ -33,7 +33,6 @@ function AccountDashboard() {
 
   const [isEditPopup, setIsEditPopup] = useState<boolean>(false);
   const [nameAccount, setNameAccount] = useState<string>("");
-  const [idAccount, setIdAccount] = useState<number>(0);
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");
 
@@ -175,7 +174,6 @@ function AccountDashboard() {
                     onClick={() => {
                       setIsEditPopup(true);
                       setNameAccount(article.name);
-                      setIdAccount(article.id);
                     }}
                   >
                     <MdOutlineModeEdit />
