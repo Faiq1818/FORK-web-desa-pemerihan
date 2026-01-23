@@ -40,12 +40,12 @@ export default function TopProducts() {
         const result = await response.json();
 
         if (result.success && result.data) {
-          const collectedImages = result.data.map((product: ShopItem) =>
-            product.imagesUrl[0]
+          const collectedImages = result.data.map(
+            (product: ShopItem) => product.imagesUrl[0],
           );
           setImgArr(collectedImages);
           setProducts(result.data);
-          console.log(result.data)
+          console.log(result.data);
         }
       } catch (error) {
         console.error("Error fetching products:", error);

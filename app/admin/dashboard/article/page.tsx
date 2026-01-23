@@ -164,7 +164,11 @@ function ArticleDashboard() {
                   </Link>
                   <button
                     className="px-3 py-1 text-xl text-[#e64553] hover:bg-red-50 rounded"
-                    onClick={() => { setIsEditPopup(true); setArticleName(article.title); setDeleteId(article.id) }}
+                    onClick={() => {
+                      setIsEditPopup(true);
+                      setArticleName(article.title);
+                      setDeleteId(article.id);
+                    }}
                   >
                     <CiTrash />
                   </button>
@@ -193,10 +197,11 @@ function ArticleDashboard() {
                 <Link
                   key={pageNum}
                   href={createPageUrl(pageNum, searchParams, pathname)}
-                  className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${pageNum === page
+                  className={`w-10 h-10 flex items-center justify-center rounded-lg border text-sm font-medium transition-colors ${
+                    pageNum === page
                       ? "bg-yellow-400 text-gray-700 border-yellow-400"
                       : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50"
-                    }`}
+                  }`}
                 >
                   {pageNum}
                 </Link>
@@ -207,10 +212,11 @@ function ArticleDashboard() {
           <Link
             href={createPageUrl(page + 1, searchParams, pathname)}
             prefetch={false}
-            className={`p-2 rounded-lg border ${page >= meta.totalPages
+            className={`p-2 rounded-lg border ${
+              page >= meta.totalPages
                 ? "pointer-events-none opacity-50 bg-gray-100 text-gray-400"
                 : "bg-white text-gray-700 hover:bg-gray-50 border-gray-300"
-              }`}
+            }`}
             aria-disabled={page >= meta.totalPages}
           >
             <ChevronRight className="w-5 h-5" />
@@ -234,7 +240,10 @@ function ArticleDashboard() {
               </button>
               <button
                 className="px-4 py-2 rounded-xl bg-yellow-400 text-gray-800 font-medium hover:bg-yellow-500"
-                onClick={() => { handleDelete(deleteId!); setIsEditPopup(false) }}
+                onClick={() => {
+                  handleDelete(deleteId!);
+                  setIsEditPopup(false);
+                }}
               >
                 Hapus
               </button>
