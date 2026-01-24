@@ -34,12 +34,12 @@ export async function PUT(
 ) {
   const { id } = await params;
   const imageArr: string[] = [];
-  let oldItem;
+  let oldLocation;
   let newSlug;
 
   const locationId = parseInt(id);
   if (isNaN(locationId)) {
-    return Response.json({ error: "ID Item tidak valid" }, { status: 400 });
+    return Response.json({ error: "ID location tidak valid" }, { status: 400 });
   }
 
   const result = await validateBody(req, TourSpot);
@@ -56,7 +56,7 @@ export async function PUT(
   }
 
   try {
-    oldItem = await prisma.location.findUnique({
+    oldLocation = await prisma.location.findUnique({
       where: { id: locationId },
     });
   } catch (err) {
@@ -71,12 +71,15 @@ export async function PUT(
     }
   }
 
-  if (!oldItem) {
-    return Response.json({ error: "Item tidak ditemukan" }, { status: 404 });
+  if (!oldLocation) {
+    return Response.json(
+      { error: "Tour spot tidak ditemukan" },
+      { status: 404 },
+    );
   }
 
-  newSlug = oldItem.slug;
-  if (result.data.name !== oldItem.name) {
+  newSlug = oldLocation.slug;
+  if (result.data.name !== oldLocation.name) {
     newSlug = generateSlug(result.data.name);
 
     const checkSlug = await prisma.location.findUnique({
@@ -95,7 +98,7 @@ export async function PUT(
 
   for (let i = 0; i < MAX_IMAGES; i++) {
     const inChanges = result.data.imagesUrl?.[i];
-    const oldUrl = oldItem.imagesUrl?.[i];
+    const oldUrl = oldLocation.imagesUrl?.[i];
 
     if (typeof inChanges === "string" && isObjectKey(inChanges)) {
       imageArr.push(inChanges);
@@ -110,7 +113,7 @@ export async function PUT(
   }
 
   try {
-    const updatedItem = await prisma.location.update({
+    const updatedLocation = await prisma.location.update({
       where: { id: locationId },
       data: {
         name: result.data.name,
@@ -128,7 +131,7 @@ export async function PUT(
 
     return Response.json({
       message: "Update berhasil",
-      data: updatedItem,
+      data: updatedLocation,
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
@@ -154,7 +157,7 @@ export async function DELETE(
 
   const locationId = parseInt(id);
   if (isNaN(locationId)) {
-    return Response.json({ error: "ID Item tidak valid" }, { status: 400 });
+    return Response.json({ error: "ID location tidak valid" }, { status: 400 });
   }
 
   const jwt = await validateJwtAuthHelper(req.headers.get("authorization"));
@@ -167,7 +170,7 @@ export async function DELETE(
       where: { id: locationId },
     });
     if (!tourSpot) {
-      throw new Error("Item nya kosong");
+      throw new Error("tour spot nya kosong");
     }
     await deleteImgInBucket(tourSpot.imagesUrl);
   } catch (err) {
@@ -183,20 +186,20 @@ export async function DELETE(
   }
 
   try {
-    const deletedItem = await prisma.location.delete({
+    const deletedLocation = await prisma.location.delete({
       where: { id: locationId },
     });
 
     return Response.json({
-      message: "Item berhasil dihapus",
-      data: deletedItem,
+      message: "location berhasil dihapus",
+      data: deletedLocation,
     });
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       switch (err.code) {
         case "P2025":
           return Response.json(
-            { error: "Item tidak ditemukan" },
+            { error: "tour spot tidak ditemukan" },
             { status: 404 },
           );
         default:

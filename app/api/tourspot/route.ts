@@ -92,7 +92,6 @@ export async function POST(req: Request) {
     dialNum = "62" + dialNum.slice(1);
   }
 
-  // push new item to db
   try {
     await prisma.location.create({
       data: {
@@ -113,7 +112,7 @@ export async function POST(req: Request) {
       switch (err.code) {
         case "P2002": // unique constraint
           return Response.json(
-            { error: "Item name already exists" },
+            { error: "tour spot name already exists" },
             { status: 409 },
           );
 
@@ -127,7 +126,10 @@ export async function POST(req: Request) {
   }
 
   // finally send success response
-  return Response.json({ message: "Item berhasil diupload" }, { status: 200 });
+  return Response.json(
+    { message: "tour spot berhasil diupload" },
+    { status: 200 },
+  );
 }
 
 const listPagingSchema = z.object({
