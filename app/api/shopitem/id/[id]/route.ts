@@ -18,10 +18,6 @@ const ShopItem = z.object({
   imagesUrl: z.array(z.string()).max(MAX_IMAGES),
 });
 
-const isObjectKey = (value: string) => {
-  return !value.startsWith("http://") && !value.startsWith("https://");
-};
-
 /////////
 // PUT //
 /////////
@@ -95,7 +91,9 @@ export async function PUT(
     oldItem.imagesUrl,
   );
 
-  await deleteImgInBucket(imageDelArr);
+  if (imageDelArr?.length > 0) {
+    await deleteImgInBucket(imageDelArr);
+  }
 
   let dialNum = result.data.contact;
   if (dialNum.startsWith("0")) {
