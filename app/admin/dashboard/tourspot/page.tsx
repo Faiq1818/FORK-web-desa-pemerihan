@@ -101,7 +101,7 @@ function ShopDashboard() {
   const handleDelete = async (id: number) => {
     const token = localStorage.getItem("auth");
     try {
-      const res = await fetch(`/api/shopitem/id/${id}`, {
+      const res = await fetch(`/api/tourspot/id/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -163,13 +163,13 @@ function ShopDashboard() {
 
                 <div className="flex gap-1 text-sm font-medium">
                   <Link
-                    href={`/shop/${item.slug}`}
+                    href={`/location/${item.slug}`}
                     className="px-3 py-1 text-xl text-[#40a02b] hover:bg-green-50 rounded border border-transparent"
                   >
                     <RiExpandDiagonalLine />
                   </Link>
                   <Link
-                    href={`/admin/dashboard/shop/edititem/${item.id}`}
+                    href={`/admin/dashboard/tourspot/edititem/${item.id}`}
                     className="px-3 py-1 text-xl text-[#1e66f5] hover:bg-blue-50 rounded border border-transparent"
                   >
                     <MdOutlineModeEdit />
