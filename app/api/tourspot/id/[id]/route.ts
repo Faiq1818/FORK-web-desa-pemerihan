@@ -5,6 +5,7 @@ import { validateBody } from "@/helpers/requestHelper";
 import { validateJwtAuthHelper } from "@/helpers/authHelper";
 import { generateSlug } from "@/helpers/generateSlugHelper";
 import { deleteImgInBucket } from "@/libs/awsS3Action";
+import { mergeImages } from "@/helpers/imgReplaceCompare";
 
 const MAX_IMAGES = 5;
 
@@ -20,10 +21,6 @@ const TourSpot = z.object({
   imagesUrl: z.array(z.string()).max(MAX_IMAGES),
 });
 
-const isObjectKey = (value: string) => {
-  return !value.startsWith("http://") && !value.startsWith("https://");
-};
-
 /////////
 // PUT //
 /////////
@@ -32,7 +29,6 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   const { id } = await params;
-  const imageArr: string[] = [];
   let oldLocation;
   let newSlug;
 
@@ -95,15 +91,14 @@ export async function PUT(
     }
   }
 
-  for (let i = 0; i < MAX_IMAGES; i++) {
-    const inChanges = result.data.imagesUrl?.[i];
-    const oldUrl = oldLocation.imagesUrl?.[i];
+  const { imageArr, imageDelArr } = mergeImages(
+    MAX_IMAGES,
+    result.data.imagesUrl,
+    oldLocation.imagesUrl,
+  );
 
-    if (typeof inChanges === "string" && isObjectKey(inChanges)) {
-      imageArr.push(inChanges);
-    } else if (typeof oldUrl === "string") {
-      imageArr.push(oldUrl);
-    }
+  if (imageDelArr?.length > 0) {
+    await deleteImgInBucket(imageDelArr);
   }
 
   let dialNum = result.data.contact;

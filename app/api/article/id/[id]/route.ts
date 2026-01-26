@@ -80,6 +80,15 @@ export async function PUT(
       );
     }
   }
+
+  if (
+    typeof oldArticle.featuredImageUrl === "string" &&
+    oldArticle.featuredImageUrl.length > 0 &&
+    result.data.featuredImageUrl !== oldArticle.featuredImageUrl
+  ) {
+    await deleteImgInBucket([oldArticle.featuredImageUrl]);
+  }
+
   try {
     const updatedArticle = await prisma.article.update({
       where: { id: articleId },

@@ -127,7 +127,7 @@ export async function GET(req: Request) {
     );
   }
 
-  let articleList;
+  let shopItemList;
   let dataCount = 0;
   const { searchParams } = new URL(req.url);
   const queryParams = {
@@ -145,7 +145,7 @@ export async function GET(req: Request) {
   const skip = (page - 1) * limit;
 
   try {
-    [articleList, dataCount] = await prisma.$transaction([
+    [shopItemList, dataCount] = await prisma.$transaction([
       prisma.shopItems.findMany({
         skip: skip,
         take: limit,
@@ -185,7 +185,7 @@ export async function GET(req: Request) {
 
   return Response.json({
     success: true,
-    data: articleList,
+    data: shopItemList,
     meta: {
       page,
       limit,
