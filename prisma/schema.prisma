@@ -51,6 +51,7 @@ model Location {
   slug      String   @unique
   contact   String
   owner     String
+  mapsUrl   String
   openTimeFrom      DateTime  @map("open_time_from")
   openTimeTo        DateTime  @map("open_time_to")
   openDay   String[] @map("open_day")
