@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
+import { getImages } from "@/helpers/presignedDownloadHelper";
 import Link from "next/link";
 
 interface Article {
@@ -34,7 +34,7 @@ export default function NewsSection() {
     if (imgArr.length === 0) return;
 
     const getPresigned = async () => {
-      const url = await getShopItemImages(imgArr);
+      const url = await getImages(imgArr);
       setImgDownloadArr(url);
     };
     getPresigned();

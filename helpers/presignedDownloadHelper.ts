@@ -1,10 +1,8 @@
 import { getPresignedDownloadUrl } from "@/libs/awsS3Action";
 
-type ShopItemResult = (string | null)[];
+type ImageItemResult = (string | null)[];
 
-export async function getShopItemImages(
-  imgUrls: string[],
-): Promise<ShopItemResult> {
+export async function getImages(imgUrls: string[]): Promise<ImageItemResult> {
   try {
     if (!imgUrls) {
       return [null];
