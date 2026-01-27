@@ -61,11 +61,11 @@ export default function TopProducts() {
         {/* SECTION HEADER */}
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            Produk Unggulan
+            Produk Khas dan UMKM
           </h2>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Produk terbaik hasil karya masyarakat Desa Pemerihan dengan kualitas
-            dan nilai lokal
+            Produk terbaik hasil karya masyarakat Pekon Pemerihan dengan
+            kualitas dan nilai lokal
           </p>
         </div>
 
@@ -91,15 +91,10 @@ export default function TopProducts() {
                       alt={product.name}
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
-
-                    {/* BADGE */}
-                    <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
-                      Produk UMKM
-                    </span>
                   </div>
 
                   {/* CONTENT */}
-                  <div className="p-4 flex flex-col gap-2">
+                  <div className="p-4 flex flex-col">
                     <h3
                       className="font-semibold text-gray-800 truncate"
                       title={product.name}

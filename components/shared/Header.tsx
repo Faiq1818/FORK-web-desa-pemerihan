@@ -43,7 +43,7 @@ export default function Header() {
             </div>
             <div>
               <h1 className="font-bold text-gray-900 tracking-wide text-lg leading-tight">
-                Desa Pemerihan
+                Pekon Pemerihan
               </h1>
               <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">
                 Kabupaten Pesisir Barat
@@ -58,7 +58,6 @@ export default function Header() {
             <NavLink href="/shop">Produk UMKM</NavLink>
             <NavLink href="/article">Artikel</NavLink>
             <NavLink href="/location">Lokasi</NavLink>
-            <NavLink href="/lokasi">Lokasi (Deprecated)</NavLink>
           </nav>
 
           {/* Mobile Menu Button */}
@@ -110,7 +109,6 @@ export default function Header() {
             <MobileNavLink href="/shop">Produk UMKM</MobileNavLink>
             <MobileNavLink href="/article">Artikel</MobileNavLink>
             <MobileNavLink href="/location">Lokasi</MobileNavLink>
-            <MobileNavLink href="/lokasi">Lokasi (Deprecated)</MobileNavLink>
           </nav>
         </div>
       )}

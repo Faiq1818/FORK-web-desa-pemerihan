@@ -119,7 +119,6 @@ function TourSpotContent() {
   return (
     <>
       {/* Grid Layout untuk Card */}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {tourSpots.map((item, i) => (
           <div
@@ -137,14 +136,6 @@ function TourSpotContent() {
                 ) : (
                   <div className="w-full h-full bg-gray-200 animate-pulse" />
                 )}
-
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
-
-                {/* Badge */}
-                <span className="absolute top-3 left-3 bg-yellow-400 text-gray-900 text-xs font-semibold px-3 py-1 rounded-full shadow">
-                  Wisata
-                </span>
               </div>
 
               {/* CONTENT */}
@@ -179,7 +170,6 @@ function TourSpotContent() {
                     {item.openDay.join(", ")}
                   </span>
                 </div>
-
                 {/* Owner */}
                 <p className="text-xs text-gray-500 mt-1 line-clamp-2">
                   Pengelola: {item.owner}
@@ -240,9 +230,7 @@ function TourSpotContent() {
 export default function Page() {
   return (
     <div className="container max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800 md:mx-20 lg:mx-40">
-        Pariwisata
-      </h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Pariwisata</h1>
 
       <Suspense fallback={<TourSpotListSkeleton />}>
         <TourSpotContent />
@@ -253,7 +241,7 @@ export default function Page() {
 
 function TourSpotListSkeleton() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
       {[...Array(12)].map((_, i) => (
         <div key={i} className="h-64 bg-gray-200 rounded-xl"></div>
       ))}
