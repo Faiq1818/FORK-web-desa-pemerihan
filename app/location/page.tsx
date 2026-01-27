@@ -7,7 +7,7 @@ import {
 } from "@/helpers/pageNumberingUiHelper";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
+import { getImages } from "@/helpers/presignedDownloadHelper";
 import { IoTimeOutline } from "react-icons/io5";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
@@ -54,7 +54,7 @@ function TourSpotContent() {
     if (imgArr.length === 0) return;
 
     const getPresigned = async () => {
-      const url = await getShopItemImages(imgArr);
+      const url = await getImages(imgArr);
       setImgDownloadArr(url);
     };
     getPresigned();
@@ -119,34 +119,35 @@ function TourSpotContent() {
   return (
     <>
       {/* Grid Layout untuk Card */}
-      <div className="gap-5 md:gap-10 lg:gap-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {tourSpots.map((item, i) => (
           <div
             key={item.slug}
-            className="group bg-white transition-all duration-300 overflow-hidden flex md:mx-20 lg:mx-40 mb-20 flex-col"
+            className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300"
           >
             <Link href={`/location/${item.slug}`} prefetch={false}>
-              {/* Bagian Image */}
-              <div className="relative rounded-xl bg-gray-100 overflow-hidden h-96">
+              {/* IMAGE */}
+              <div className="relative h-56 overflow-hidden">
                 {imgDownloadArr[i] ? (
                   <img
                     src={imgDownloadArr[i]}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 ) : (
-                  <div className="flex items-center justify-center w-full h-full text-gray-400">
-                    <span className="text-sm">Loading...</span>
-                  </div>
+                  <div className="w-full h-full bg-gray-200 animate-pulse" />
                 )}
               </div>
 
-              {/* Bagian Konten */}
-              <div className="pb-4 pt-1 flex flex-col flex-grow">
-                <p className="text-3xl font-semibold">{item.name}</p>
-                <div className="flex flex-row items-center gap-2">
-                  <IoTimeOutline className="text-xl text-gray-700" />
-                  <p className="font-medium text-gray-700">
-                    Buka jam{" "}
+              {/* CONTENT */}
+              <div className="p-4 flex flex-col gap-2">
+                <h2 className="text-lg font-semibold text-gray-800 line-clamp-1">
+                  {item.name}
+                </h2>
+
+                {/* Jam buka */}
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <IoTimeOutline className="text-base" />
+                  <span>
                     {new Date(item.openTimeFrom).toLocaleTimeString("id-ID", {
                       hour: "2-digit",
                       minute: "2-digit",
@@ -159,16 +160,20 @@ function TourSpotContent() {
                       hour12: false,
                     })}{" "}
                     WIB
-                  </p>
+                  </span>
                 </div>
-                <div className="flex gap-2 items-center text-gray-700">
-                  <FaRegCalendarAlt className="text-gray-700 text-xl" />
-                  <div>
-                    {item.openDay.map((item, index) => (
-                      <span key={index}>{item} </span>
-                    ))}
-                  </div>
+
+                {/* Hari buka */}
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <FaRegCalendarAlt />
+                  <span className="line-clamp-1">
+                    {item.openDay.join(", ")}
+                  </span>
                 </div>
+                {/* Owner */}
+                <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                  Pengelola: {item.owner}
+                </p>
               </div>
             </Link>
           </div>
@@ -225,7 +230,7 @@ function TourSpotContent() {
 export default function Page() {
   return (
     <div className="container max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800 md:mx-20 lg:mx-40">
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">
         Pariwisata
       </h1>
 
@@ -238,7 +243,7 @@ export default function Page() {
 
 function TourSpotListSkeleton() {
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 animate-pulse">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 animate-pulse">
       {[...Array(12)].map((_, i) => (
         <div key={i} className="h-64 bg-gray-200 rounded-xl"></div>
       ))}

@@ -7,7 +7,7 @@ import {
 } from "@/helpers/pageNumberingUiHelper";
 import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronRight } from "lucide-react";
-import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
+import { getImages } from "@/helpers/presignedDownloadHelper";
 import formatRupiah from "@/helpers/rupiahFormat";
 
 interface ShopItem {
@@ -50,7 +50,7 @@ function ShopContent() {
     if (imgArr.length === 0) return;
 
     const getPresigned = async () => {
-      const url = await getShopItemImages(imgArr);
+      const url = await getImages(imgArr);
       setImgDownloadArr(url);
     };
     getPresigned();

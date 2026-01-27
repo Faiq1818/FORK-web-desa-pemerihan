@@ -1,6 +1,7 @@
 import { MapPin, Phone, Mail } from "lucide-react";
 import NewsSection from "@/components/nonShared/newsSection";
 import TopProducts from "@/components/nonShared/topProducts";
+import TopTourspot from "@/components/nonShared/topTourspot";
 
 export default function HomePage() {
   return (
@@ -100,7 +101,7 @@ export default function HomePage() {
               >
                 <iframe
                   className="absolute top-0 left-0 w-full h-full"
-                  src="https://www.youtube.com/embed/wB8AArJG6BE"
+                  src="https://www.youtube.com/embed/ECbsWJ7V3BI?si=9AiznK_liyqXOiU2"
                   title="Video Desa Pemerihan"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
@@ -253,6 +254,7 @@ export default function HomePage() {
 
       <NewsSection />
       <TopProducts />
+      <TopTourspot />
 
       {/* Lokasi Desa */}
       <section id="contact" className="py-16 md:py-24 bg-gray-50">
