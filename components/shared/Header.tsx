@@ -43,7 +43,7 @@ export default function Header() {
             </div>
             <div>
               <h1 className="font-bold text-gray-900 tracking-wide text-lg leading-tight">
-                Desa Pemerihan
+                Pekon Pemerihan
               </h1>
               <p className="text-[10px] text-gray-500 uppercase tracking-wider font-medium">
                 Kabupaten Pesisir Barat

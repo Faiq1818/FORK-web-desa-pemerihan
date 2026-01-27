@@ -230,9 +230,7 @@ function TourSpotContent() {
 export default function Page() {
   return (
     <div className="container max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">
-        Pariwisata
-      </h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">Pariwisata</h1>
 
       <Suspense fallback={<TourSpotListSkeleton />}>
         <TourSpotContent />

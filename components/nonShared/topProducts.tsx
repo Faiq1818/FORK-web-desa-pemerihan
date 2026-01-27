@@ -61,11 +61,11 @@ export default function TopProducts() {
         {/* SECTION HEADER */}
         <div className="text-center mb-14">
           <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-            Produk Unggulan
+            Produk Khas dan UMKM
           </h2>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Produk terbaik hasil karya masyarakat Desa Pemerihan dengan kualitas
-            dan nilai lokal
+            Produk terbaik hasil karya masyarakat Pekon Pemerihan dengan
+            kualitas dan nilai lokal
           </p>
         </div>
 

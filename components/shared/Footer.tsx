@@ -15,19 +15,18 @@ export default function Footer() {
               </div>
               <div>
                 <h3 className="font-bold text-xl tracking-wide">
-                  Desa Pemerihan
+                  Pekon Pemerihan
                 </h3>
                 <p className="text-amber-200 text-xs uppercase tracking-wider">
                   Kabupaten Pesisir Barat
                 </p>
               </div>
             </div>
-            <p className="text-amber-50/80 text-sm leading-relaxed mb-6">
-              Mewujudkan desa yang mandiri, sejahtera, dan berkelanjutan.
-            </p>
             <div className="text-sm text-amber-50/70 space-y-1">
-              <p>Jl Desa Pemerihan No. 123, Kab. Matus, Jatim</p>
-              <p>info@desapemerihan.id • (0341) 555-0123</p>
+              <p>
+                Pekon Pemerihan, Kecamatan Bengkunat, Kabupaten Pesisir Barat,
+                Provinsi Lampung, Indonesia
+              </p>
             </div>
           </div>
 
@@ -83,7 +82,7 @@ export default function Footer() {
         <div className="border-t border-amber-900/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <p className="text-amber-50/60 text-xs text-center md:text-left">
-              © 2025 Pemerintah Desa Pemerihan. All rights reserved.
+              © 2025 Pemerintah Pekon Pemerihan. All rights reserved.
             </p>
             <p className="text-amber-50/60 text-xs text-center md:text-left">
               Pekon Pemerintah | KKN Tematik 16 ITERA Genap 2025/2026.

@@ -85,21 +85,20 @@ export default function NewsSection() {
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
-            Kabar Desa
+            Artikel
           </h2>
           <p className="text-center text-gray-600 mb-12">
-            Berita terkini dan kegiatan terbaru dari Desa Pemerihan untuk
-            kepentingan bersama
+            Berita terkini dan kegiatan terbaru dari Pekon Pemerihan
           </p>
 
           {isLoading ? (
             <div className="text-center py-12">
               <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-green-600 border-r-transparent"></div>
-              <p className="text-gray-600 mt-4">Memuat berita...</p>
+              <p className="text-gray-600 mt-4">Memuat artikel...</p>
             </div>
           ) : newsArticles.length === 0 ? (
             <div className="text-center py-12">
-              <p className="text-gray-600">Belum ada berita tersedia</p>
+              <p className="text-gray-600">Belum ada artikel tersedia</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -136,7 +135,7 @@ export default function NewsSection() {
           <div className="text-center mt-12">
             <Link href="/shop">
               <button className="cursor-pointer bg-amber-600 text-white font-semibold px-8 py-3 rounded-full hover:bg-amber-700 transition">
-                Lihat Semua Berita →
+                Lihat Semua Artikel →
               </button>
             </Link>
           </div>

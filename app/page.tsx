@@ -18,7 +18,7 @@ export default function HomePage() {
           <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center">
             Selamat Datang di
             <br />
-            <span className="text-yellow-400">Desa Pemerihan</span>
+            <span className="text-yellow-400">Pekon Pemerihan</span>
           </h1>
           <p className="text-lg md:text-xl mb-8 text-center max-w-2xl">
             Kecamatan Bengkunat, Pesisir Barat, Lampung - Indonesia
@@ -32,7 +32,7 @@ export default function HomePage() {
           {/* Title with underline */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-              Desa Pemerihan
+              Pekon Pemerihan
             </h2>
             <div className="w-24 h-1 bg-yellow-400 mx-auto"></div>
           </div>
@@ -86,13 +86,8 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
-            Video Profil Desa Pemerihan
+            Video Profil Pekon Pemerihan
           </h2>
-          <p className="text-center text-gray-600 mb-12">
-            Saksikan keindahan dan kehidupan masyarakat Desa Pemerihan dalam
-            video eksklusif ini
-          </p>
-
           <div className="max-w-7xl mx-auto">
             <div className="rounded-2xl overflow-hidden shadow-xl">
               <div
@@ -120,11 +115,11 @@ export default function HomePage() {
       <section id="contact" className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
-            Lokasi Desa
+            Lokasi Pekon
           </h2>
           <p className="text-center text-gray-600 mb-12">
             Temukan lokasi kami di peta untuk berkunjung dan berkenalan dengan
-            Desa Pemerihan
+            Pekon Pemerihan
           </p>
 
           <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
@@ -143,7 +138,7 @@ export default function HomePage() {
             <div className="p-6 text-center bg-gradient-to-r from-green-600 to-green-700 text-white">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <MapPin className="w-5 h-5" />
-                <h3 className="text-xl font-bold">Desa Pemerihan</h3>
+                <h3 className="text-xl font-bold">Pekon Pemerihan</h3>
               </div>
               <p className="text-green-100">
                 Kecamatan Bengkunat, Kabupaten Pesisir Barat, Provinsi Lampung
