@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { Calendar, ChevronRight } from "lucide-react";
 import { useEffect, useState, Suspense } from "react";
-import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
+import { getImages } from "@/helpers/presignedDownloadHelper";
 import { useSearchParams, usePathname } from "next/navigation";
 import {
   createPageUrl,
@@ -48,7 +48,7 @@ function ArticleContent() {
     if (imgArr.length === 0) return;
 
     const getPresigned = async () => {
-      const url = await getShopItemImages(imgArr);
+      const url = await getImages(imgArr);
       setImgDownloadArr(url);
     };
     getPresigned();

@@ -1,8 +1,9 @@
 "use client";
+
 import { useState, useEffect } from "react";
-import { getShopItemImages } from "@/helpers/presignedDownloadHelper";
-import formatRupiah from "@/helpers/rupiahFormat";
 import Link from "next/link";
+import { getImages } from "@/helpers/presignedDownloadHelper";
+import formatRupiah from "@/helpers/rupiahFormat";
 
 interface ShopItem {
   name: string;
@@ -21,18 +22,19 @@ export default function TopProducts() {
   const [imgArr, setImgArr] = useState<string[]>([]);
   const [imgDownloadArr, setImgDownloadArr] = useState<(string | null)[]>([]);
 
-  // Fetch presigned URLs for images
+  // Fetch presigned image URLs
   useEffect(() => {
     if (imgArr.length === 0) return;
 
     const getPresigned = async () => {
-      const url = await getShopItemImages(imgArr);
-      setImgDownloadArr(url);
+      const urls = await getImages(imgArr);
+      setImgDownloadArr(urls);
     };
+
     getPresigned();
   }, [imgArr]);
 
-  // Fetch products from API
+  // Fetch products
   useEffect(() => {
     async function fetchProducts() {
       try {
@@ -40,12 +42,8 @@ export default function TopProducts() {
         const result = await response.json();
 
         if (result.success && result.data) {
-          const collectedImages = result.data.map(
-            (product: ShopItem) => product.imagesUrl[0],
-          );
-          setImgArr(collectedImages);
           setProducts(result.data);
-          console.log(result.data);
+          setImgArr(result.data.map((item: ShopItem) => item.imagesUrl[0]));
         }
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -53,57 +51,68 @@ export default function TopProducts() {
         setIsLoading(false);
       }
     }
+
     fetchProducts();
   }, []);
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-2">
-          Produk Unggulan
-        </h2>
-        <p className="text-center text-gray-600 mb-12">
-          Produk-produk terbaik dari Desa Pemerihan
-        </p>
+        {/* SECTION HEADER */}
+        <div className="text-center mb-14">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
+            Produk Unggulan
+          </h2>
+          <p className="text-gray-600 max-w-xl mx-auto">
+            Produk terbaik hasil karya masyarakat Desa Pemerihan dengan kualitas
+            dan nilai lokal
+          </p>
+        </div>
 
+        {/* CONTENT */}
         {isLoading ? (
-          <div className="text-center py-12">
-            <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-green-600 border-r-transparent"></div>
-            <p className="text-gray-600 mt-4">Memuat produk...</p>
-          </div>
+          <ProductSkeleton />
         ) : products.length === 0 ? (
-          <div className="text-center py-12">
-            <p className="text-gray-600">Belum ada produk tersedia</p>
+          <div className="text-center py-16 text-gray-500">
+            Belum ada produk tersedia
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-10 lg:gap-16">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {products.map((product, index) => (
               <div
-                key={index}
-                className="group bg-white transition-all duration-300 overflow-hidden flex flex-col"
+                key={product.slug}
+                className="group bg-white rounded-2xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
               >
                 <Link href={`/shop/${product.slug}`}>
-                  {/* Image */}
-                  <div className="relative aspect-square rounded-xl bg-gray-100 overflow-hidden">
+                  {/* IMAGE */}
+                  <div className="relative aspect-square overflow-hidden">
                     <img
                       src={imgDownloadArr[index] || "/images/placeholder.jpg"}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100"
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
+
+                    {/* BADGE */}
+                    <span className="absolute top-3 left-3 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow">
+                      Produk UMKM
+                    </span>
                   </div>
 
-                  {/* Konten */}
-                  <div className="pb-4 pt-1 flex flex-col flex-grow">
-                    <p
-                      className="font-medium text-gray-600 truncate leading-tight"
+                  {/* CONTENT */}
+                  <div className="p-4 flex flex-col gap-2">
+                    <h3
+                      className="font-semibold text-gray-800 truncate"
                       title={product.name}
                     >
                       {product.name}
-                    </p>
-                    <p className="font-bold leading-tight">
+                    </h3>
+
+                    <p className="text-amber-600 font-bold text-lg">
                       {formatRupiah(product.price)}
                     </p>
-                    <p className="text-sm text-gray-600 line-clamp-2 flex-grow mt-1">
-                      {product.owner}
+
+                    <p className="text-sm text-gray-500 line-clamp-2">
+                      Oleh {product.owner}
                     </p>
                   </div>
                 </Link>
@@ -112,14 +121,35 @@ export default function TopProducts() {
           </div>
         )}
 
-        <div className="text-center mt-12">
+        {/* BUTTON */}
+        <div className="text-center mt-14">
           <Link href="/shop">
-            <button className="cursor-pointer bg-amber-600 text-white font-semibold px-8 py-3 rounded-full hover:bg-amber-700 transition">
-              Lihat Semua Produk →
+            <button className="inline-flex items-center gap-2 bg-amber-600 hover:bg-amber-700 text-white font-semibold px-8 py-3 rounded-full transition shadow-lg hover:shadow-xl">
+              Lihat Semua Produk
+              <span className="text-lg">→</span>
             </button>
           </Link>
         </div>
       </div>
     </section>
+  );
+}
+
+/* =======================
+   SKELETON LOADING
+======================= */
+function ProductSkeleton() {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-pulse">
+      {[...Array(4)].map((_, i) => (
+        <div key={i} className="bg-white rounded-2xl overflow-hidden shadow">
+          <div className="aspect-square bg-gray-200" />
+          <div className="p-4 space-y-3">
+            <div className="h-4 bg-gray-200 rounded w-3/4" />
+            <div className="h-4 bg-gray-200 rounded w-1/2" />
+          </div>
+        </div>
+      ))}
+    </div>
   );
 }
