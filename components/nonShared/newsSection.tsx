@@ -78,7 +78,6 @@ export default function NewsSection() {
     fetchArticles();
   }, []);
 
-  console.log(newsArticles);
   return (
     <>
       {/* Kabar Desa (News) */}
@@ -105,14 +104,14 @@ export default function NewsSection() {
               {newsArticles.map((article, index) => (
                 <div
                   key={index}
-                  className="bg-white rounded-xl cursor-pointer border border-slate-200 overflow-hidden hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl cursor-pointer border border-slate-200 overflow-hidden hover:shadow-md transition-shadow group"
                 >
                   <Link href={`/article/${article.slug}`}>
                     <div className="relative">
                       <img
                         src={imgDownloadArr[index] || article.image}
                         alt={article.title}
-                        className="w-full h-48 object-cover"
+                        className="w-full h-48 object-cover group-hover:scale-105 duration-100"
                       />
                     </div>
                     <div className="p-6">

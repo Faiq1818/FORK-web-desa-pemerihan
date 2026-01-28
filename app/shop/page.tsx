@@ -138,15 +138,15 @@ function ShopContent() {
               {/* Bagian Konten */}
               <div className="pb-4 pt-1 flex flex-col flex-grow">
                 <p
-                  className="font-medium text-gray-600 truncate mb-0 leading-tight"
+                  className="font-medium text-gray-600 truncate leading-tight"
                   title={item.name}
                 >
                   {item.name}
                 </p>
-                <p className="font-bold mt-0 leading-tight">
+                <p className="font-bold leading-tight">
                   {formatRupiah(item.price)}
                 </p>
-                <p className="text-sm text-gray-600 line-clamp-2 flex-grow mt-1">
+                <p className="text-sm text-gray-600 line-clamp-2 flex-grow">
                   {item.owner}
                 </p>
               </div>

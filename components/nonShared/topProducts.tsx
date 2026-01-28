@@ -81,7 +81,7 @@ export default function TopProducts() {
             {products.map((product, index) => (
               <div
                 key={product.slug}
-                className="group bg-white rounded-2xl overflow-hidden shadow hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-sm transition-all duration-100"
               >
                 <Link href={`/shop/${product.slug}`}>
                   {/* IMAGE */}
@@ -89,7 +89,7 @@ export default function TopProducts() {
                     <img
                       src={imgDownloadArr[index] || "/images/placeholder.jpg"}
                       alt={product.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      className="w-full h-full object-cover transition-transform duration-100 group-hover:scale-105"
                     />
                   </div>
 
@@ -102,7 +102,7 @@ export default function TopProducts() {
                       {product.name}
                     </h3>
 
-                    <p className="text-amber-600 font-bold text-lg">
+                    <p className="text-amber-600 font-bold">
                       {formatRupiah(product.price)}
                     </p>
 
@@ -130,9 +130,6 @@ export default function TopProducts() {
   );
 }
 
-/* =======================
-   SKELETON LOADING
-======================= */
 function ProductSkeleton() {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 animate-pulse">

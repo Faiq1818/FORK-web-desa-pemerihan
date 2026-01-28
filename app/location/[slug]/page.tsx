@@ -106,7 +106,7 @@ export default async function Page({ params }: Props) {
                       {tourSpotData.openDay.map((item, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700 border border-blue-100"
+                          className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-amber-100 text-amber-700"
                         >
                           {item}
                         </span>
