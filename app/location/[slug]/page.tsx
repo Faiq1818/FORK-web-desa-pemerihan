@@ -40,7 +40,6 @@ export default async function Page({ params }: Props) {
       </div>
     );
   }
-  console.log(tourSpotData);
 
   const formattedPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
