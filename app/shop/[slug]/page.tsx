@@ -1,12 +1,29 @@
 import { getShopItemData } from "@/services/getShopItemData-shopPage";
 import ProductGallery from "@/components/nonShared/productGallery";
 import WhatsAppButton from "@/components/nonShared/whatsAppButton";
+import type { Metadata } from "next";
 
-export default async function Page({
-  params,
-}: {
+type Props = {
   params: Promise<{ slug: string }>;
-}) {
+};
+
+// metadata
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const [shopItem] = await getShopItemData(slug);
+
+  return {
+    title: `${shopItem?.name}`,
+    description: shopItem?.description,
+
+    openGraph: {
+      title: shopItem?.name,
+      description: shopItem?.description,
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
   const { slug } = await params;
   const [shopItem, imagesUrl] = await getShopItemData(slug);
 

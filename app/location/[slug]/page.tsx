@@ -2,12 +2,29 @@ import LocationGallery from "@/components/nonShared/locationGallery";
 import MapsRedirectButton from "@/components/nonShared/mapsRedirectButton";
 import WhatsAppButtonTourSpot from "@/components/nonShared/whatsAppButtonTourSpot";
 import { getTourSpotData } from "@/services/getTourSpotData-tourSpotPage";
+import type { Metadata } from "next";
 
-export default async function Page({
-  params,
-}: {
+type Props = {
   params: Promise<{ slug: string }>;
-}) {
+};
+
+// metadata
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const [tourSpotData] = await getTourSpotData(slug);
+
+  return {
+    title: `${tourSpotData?.name}`,
+    description: tourSpotData?.description,
+
+    openGraph: {
+      title: tourSpotData?.name,
+      description: tourSpotData?.description,
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
   const { slug } = await params;
   const [tourSpotData, imagesUrl] = await getTourSpotData(slug);
 

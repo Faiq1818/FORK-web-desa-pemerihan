@@ -1,10 +1,27 @@
 import { getArticleData } from "@/services/getArticleData-articlePage";
+import type { Metadata } from "next";
 
-export default async function Page({
-  params,
-}: {
+type Props = {
   params: Promise<{ slug: string }>;
-}) {
+};
+
+// metadata
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const [article] = await getArticleData(slug);
+
+  return {
+    title: `${article?.title}`,
+    description: article?.shortDescription,
+
+    openGraph: {
+      title: article?.title,
+      description: article?.shortDescription,
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
   const { slug } = await params;
   const [article, imageUrl] = await getArticleData(slug);
 
@@ -23,19 +40,14 @@ export default async function Page({
   }
 
   return (
-    // Container utama dengan background putih bersih
     <main className="min-h-screen bg-white">
       <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
         {/* HEADER: Judul Artikel */}
         <header className="mb-10 text-center">
-          {/* Menggunakan div wrapper untuk dangerous HTML, tapi di-styling seperti H1 */}
           <div
             className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl md:text-5xl leading-tight mb-6"
             dangerouslySetInnerHTML={{ __html: article?.title ?? "" }}
           />
-
-          {/* Opsional: Area untuk Tanggal/Author jika ada datanya nanti */}
-          {/* <div className="text-gray-500 text-sm">Diposting oleh Admin</div> */}
         </header>
 
         {/* FEATURED IMAGE */}
@@ -47,7 +59,6 @@ export default async function Page({
               className="w-full h-auto object-cover max-h-[500px]"
             />
           ) : (
-            // Placeholder minimalis jika tidak ada gambar
             <div className="flex h-64 w-full items-center justify-center bg-gray-50 text-gray-400">
               <span className="text-sm italic">Tidak ada gambar sampul</span>
             </div>
