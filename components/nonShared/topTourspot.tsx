@@ -1,9 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { getImages } from "@/helpers/presignedDownloadHelper";
-import formatRupiah from "@/helpers/rupiahFormat";
 import Link from "next/link";
-import { timeFormatter } from "@/helpers/timeFormatterToID";
 import { IoTimeOutline } from "react-icons/io5";
 import { FaRegCalendarAlt } from "react-icons/fa";
 
@@ -86,34 +84,33 @@ export default function TopTourspot() {
               <Link
                 href={`/location/${ts.slug}`}
                 key={index}
-                className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
+                className="group bg-white rounded-2xl overflow-hidden border border-gray-200 hover:shadow-sm transition-all duration-100"
               >
                 {/* Image */}
                 <div className="relative aspect-square overflow-hidden">
                   <img
                     src={imgDownloadArr[index] || "/images/placeholder.jpg"}
                     alt={ts.name}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-100"
                   />
 
                   {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+                </div>
 
+                {/* Content */}
+                <div className="p-4 space-y-2">
                   {/* Title on image */}
-                  <div className="absolute bottom-3 left-3 right-3">
+                  <div className="">
                     <h3
-                      className="text-white font-semibold text-lg truncate"
+                      className="text-black font-semibold text-lg truncate"
                       title={ts.name}
                     >
                       {ts.name}
                     </h3>
                   </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-4 space-y-2">
                   {/* Jam buka */}
-                  <div className="flex items-center gap-2 text-sm text-gray-700">
+                  <div className="flex items-center gap-2 font-semibold text-sm text-gray-600">
                     <IoTimeOutline className="text-lg text-amber-600" />
                     <span>
                       {new Date(ts.openTimeFrom).toLocaleTimeString("id-ID", {

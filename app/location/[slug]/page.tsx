@@ -2,12 +2,29 @@ import LocationGallery from "@/components/nonShared/locationGallery";
 import MapsRedirectButton from "@/components/nonShared/mapsRedirectButton";
 import WhatsAppButtonTourSpot from "@/components/nonShared/whatsAppButtonTourSpot";
 import { getTourSpotData } from "@/services/getTourSpotData-tourSpotPage";
+import type { Metadata } from "next";
 
-export default async function Page({
-  params,
-}: {
+type Props = {
   params: Promise<{ slug: string }>;
-}) {
+};
+
+// metadata
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params;
+  const [tourSpotData] = await getTourSpotData(slug);
+
+  return {
+    title: `${tourSpotData?.name}`,
+    description: tourSpotData?.description,
+
+    openGraph: {
+      title: tourSpotData?.name,
+      description: tourSpotData?.description,
+    },
+  };
+}
+
+export default async function Page({ params }: Props) {
   const { slug } = await params;
   const [tourSpotData, imagesUrl] = await getTourSpotData(slug);
 
@@ -23,7 +40,6 @@ export default async function Page({
       </div>
     );
   }
-  console.log(tourSpotData);
 
   const formattedPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
@@ -90,7 +106,7 @@ export default async function Page({
                       {tourSpotData.openDay.map((item, index) => (
                         <span
                           key={index}
-                          className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-blue-50 text-blue-700 border border-blue-100"
+                          className="inline-flex items-center px-4 py-1.5 rounded-full text-sm font-medium bg-amber-100 text-amber-700"
                         >
                           {item}
                         </span>

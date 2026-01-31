@@ -1,4 +1,4 @@
-import { MapPin, Phone, Mail } from "lucide-react";
+import { MapPin } from "lucide-react";
 import NewsSection from "@/components/nonShared/newsSection";
 import TopProducts from "@/components/nonShared/topProducts";
 import TopTourspot from "@/components/nonShared/topTourspot";
