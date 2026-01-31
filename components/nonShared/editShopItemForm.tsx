@@ -1,10 +1,10 @@
 "use client";
-
 import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { getPresignedUploadUrl } from "@/libs/awsS3Action";
 import { IoSave } from "react-icons/io5";
 import { LuImagePlus, LuPencil } from "react-icons/lu";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface ShopItemFormProps {
   initialData: {
@@ -22,6 +22,7 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
   const MAX_IMAGES = 5;
   const router = useRouter();
   const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
+  const existingUrls = initialData.previewUrl;
 
   const [name, setName] = useState(initialData.name);
   const [price, setPrice] = useState(initialData.price);
@@ -31,9 +32,10 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
   const [files, setFiles] = useState<(File | null)[]>(
     Array(MAX_IMAGES).fill(null),
   );
-  const existingUrls = initialData.previewUrl;
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleCustomClick = (index: number) => {
+    if (isLoading) return;
     fileInputRef.current[index]?.click();
   };
 
@@ -45,6 +47,8 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
   };
 
   const handleProcess = async () => {
+    setIsLoading(true);
+
     try {
       const token = localStorage.getItem("auth");
 
@@ -54,6 +58,7 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
         file: File;
         index: number;
       }[];
+
       const uploaded = await Promise.all(
         filesToUpload.map(async ({ file, index }) => {
           const result = await getPresignedUploadUrl(
@@ -109,6 +114,8 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
     } catch (err) {
       console.error(err);
       alert("Gagal memperbarui item");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -120,10 +127,11 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
       <div className="flex flex-col mb-5">
         <p>Nama Barang:</p>
         <input
-          className="border px-2 py-1 border-gray-300 w-1/2 rounded"
+          className="border px-2 py-1 border-gray-300 w-1/2 rounded disabled:bg-gray-100 disabled:text-gray-500"
           value={name}
           placeholder="Nama Barang"
           onChange={(e) => setName(e.target.value)}
+          disabled={isLoading}
         />
       </div>
 
@@ -131,10 +139,11 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
       <div className="flex flex-col mb-5">
         <p>Harga:</p>
         <input
-          className="border px-2 py-1 border-gray-300 w-1/3 rounded"
+          className="border px-2 py-1 border-gray-300 w-1/3 rounded disabled:bg-gray-100 disabled:text-gray-500"
           type="number"
           value={price}
           onChange={(e) => setPrice(Number(e.target.value))}
+          disabled={isLoading}
         />
       </div>
 
@@ -142,10 +151,11 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
       <div className="flex flex-col mb-5">
         <p>Nama Pemilik/Toko:</p>
         <input
-          className="border px-2 py-1 border-gray-300 w-1/3 rounded"
+          className="border px-2 py-1 border-gray-300 w-1/3 rounded disabled:bg-gray-100 disabled:text-gray-500"
           placeholder="Dani"
           value={owner}
           onChange={(e) => setOwner(e.target.value)}
+          disabled={isLoading}
         />
       </div>
 
@@ -153,10 +163,11 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
       <div className="flex flex-col mb-5">
         <p>Nomor Whatsapp:</p>
         <input
-          className="border px-2 py-1 border-gray-300 w-1/3 rounded"
+          className="border px-2 py-1 border-gray-300 w-1/3 rounded disabled:bg-gray-100 disabled:text-gray-500"
           placeholder="081234567890"
           value={contact}
           onChange={(e) => setContact(e.target.value)}
+          disabled={isLoading}
         />
       </div>
 
@@ -178,6 +189,7 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
                     fileInputRef.current[i] = el;
                   }}
                   className="hidden"
+                  disabled={isLoading}
                   onChange={(e) => {
                     const selected = e.target.files?.[0];
                     if (!selected) return;
@@ -194,23 +206,26 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
                 {preview ? (
                   <div
                     onClick={() => handleCustomClick(i)}
-                    className="cursor-pointer relative overflow-hidden rounded-2xl w-40 h-40 border border-slate-200 group"
+                    className={`relative overflow-hidden rounded-2xl w-40 h-40 border border-slate-200 group transition 
+                        ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
                   >
                     <img
                       src={preview}
                       alt={`preview-${i}`}
-                      className="w-full h-full object-cover group-hover:scale-105 transition"
+                      className={`w-full h-full object-cover transition ${!isLoading && "group-hover:scale-105"}`}
                     />
-                    <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
-                      <LuPencil className="text-white text-2xl" />
-                    </div>
+                    {!isLoading && (
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition">
+                        <LuPencil className="text-white text-2xl" />
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div
                     onClick={() => handleCustomClick(i)}
-                    className="flex items-center justify-center text-sm text-slate-400
-                    bg-slate-50 w-40 h-40 rounded-2xl border border-slate-200 cursor-pointer
-                    flex-col hover:bg-slate-100 transition"
+                    className={`flex items-center justify-center text-sm text-slate-400
+                      bg-slate-50 w-40 h-40 rounded-2xl border border-slate-200 
+                      flex-col transition ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-slate-100"}`}
                   >
                     <LuImagePlus className="text-2xl mb-2" />
                     <span>Upload</span>
@@ -234,23 +249,35 @@ export default function EditShopItemForm({ initialData }: ShopItemFormProps) {
       <div className="flex flex-col gap-2 mb-5">
         <p>Deskripsi barang:</p>
         <textarea
-          className="border px-2 py-1 border-gray-300 w-full md:w-1/2 rounded min-h-[100px]"
+          className="border px-2 py-1 border-gray-300 w-full md:w-1/2 rounded min-h-[100px] disabled:bg-gray-100 disabled:text-gray-500"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          disabled={isLoading}
         />
       </div>
 
       {/* Submit */}
       <div className="my-5 flex justify-end md:w-1/2">
         <div
-          className="rounded-2xl text-sm px-4 py-2 bg-blue-600 text-white
-          font-bold cursor-pointer hover:bg-blue-700 transition shadow-md"
-          onClick={handleProcess}
+          className={`rounded-2xl text-sm px-4 py-2 font-bold transition shadow-md flex items-center gap-2
+            ${
+              isLoading
+                ? "bg-gray-400 text-white cursor-not-allowed shadow-none"
+                : "bg-blue-600 text-white cursor-pointer hover:bg-blue-700"
+            }`}
+          onClick={isLoading ? undefined : handleProcess}
         >
-          <div className="flex items-center gap-2">
-            <p>Simpan Perubahan</p>
-            <IoSave />
-          </div>
+          {isLoading ? (
+            <>
+              <p>Menyimpan...</p>
+              <AiOutlineLoading3Quarters className="animate-spin" />
+            </>
+          ) : (
+            <>
+              <p>Simpan Perubahan</p>
+              <IoSave />
+            </>
+          )}
         </div>
       </div>
     </div>

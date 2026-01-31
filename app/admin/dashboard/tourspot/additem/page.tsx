@@ -4,6 +4,7 @@ import { IoSend } from "react-icons/io5";
 import { getPresignedUploadUrl } from "@/libs/awsS3Action";
 import { useRouter } from "next/navigation";
 import { LuImagePlus } from "react-icons/lu";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
 
@@ -21,10 +22,14 @@ export default function Page() {
   const [closeHour, setCloseHour] = useState("17");
   const [closeMinute, setCloseMinute] = useState("00");
   const [file, setFile] = useState<(File | null)[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
   const fileInputRef = useRef<(HTMLInputElement | null)[]>([]);
   const howMuchImages = [0, 1, 2, 3, 4];
 
   const handleDayToggle = (day: string) => {
+    if (isLoading) return;
+
     setSelectedDays((prev) => {
       if (prev.includes(day)) {
         return prev.filter((d) => d !== day);
@@ -40,7 +45,8 @@ export default function Page() {
 
       if (selectedDays.length === 0) {
         alert("Pilih minimal satu hari operasional!");
-        return;
+        // [TAMBAH] Throw error agar tertangkap di handleUpload untuk stop loading
+        throw new Error("Hari operasional kosong");
       }
 
       const finalOpenDays = days.filter((day) => selectedDays.includes(day));
@@ -79,6 +85,7 @@ export default function Page() {
     } catch (err) {
       alert("Gagal terkirim");
       console.error(err);
+      throw err;
     }
   };
 
@@ -89,6 +96,8 @@ export default function Page() {
       alert("Pilih minimal satu gambar!");
       return;
     }
+
+    setIsLoading(true);
 
     try {
       const uploadPromises = validFiles.map(async (currentFile) => {
@@ -126,14 +135,18 @@ export default function Page() {
         throw new Error("Tidak ada gambar yang berhasil diupload");
       }
 
-      handleAddTourSpot(uploadedObjectNames);
+      await handleAddTourSpot(uploadedObjectNames);
     } catch (err) {
       console.error("Upload Error:", err);
-      alert("Terjadi kesalahan saat mengupload gambar.");
+      if (err instanceof Error && err.message !== "Hari operasional kosong") {
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleCustomClick = (index: number) => {
+    if (isLoading) return;
     fileInputRef.current[index]?.click();
   };
 
@@ -143,50 +156,55 @@ export default function Page() {
         <div className="flex flex-col mb-5">
           <p>Nama Lokasi Pariwisata:</p>
           <input
-            className="border px-2 py-1 border-gray-300 w-1/2"
+            className="border px-2 py-1 border-gray-300 w-1/2 disabled:bg-gray-100 disabled:text-gray-500"
             value={name}
             placeholder="Melloi"
             onChange={(e) => setName(e.target.value)}
+            disabled={isLoading}
           />
         </div>
 
         <div className="flex flex-col mb-5">
           <p>Biaya Masuk:</p>
           <input
-            className="border px-2 py-1 border-gray-300 w-1/3"
+            className="border px-2 py-1 border-gray-300 w-1/3 disabled:bg-gray-100 disabled:text-gray-500"
             type="number"
             value={price}
             onChange={(e) => setPrice(Number(e.target.value))}
+            disabled={isLoading}
           />
         </div>
 
         <div className="flex flex-col mb-5">
           <p>Nama Kontak Pemilik/Pengurus Lokasi Pariwisata:</p>
           <input
-            className="border px-2 py-1 border-gray-300 w-1/3"
+            className="border px-2 py-1 border-gray-300 w-1/3 disabled:bg-gray-100 disabled:text-gray-500"
             placeholder="Dani"
             value={owner}
             onChange={(e) => setOwner(e.target.value)}
+            disabled={isLoading}
           />
         </div>
 
         <div className="flex flex-col mb-5">
           <p>Nomor Whatsapp:</p>
           <input
-            className="border px-2 py-1 border-gray-300 w-1/3"
+            className="border px-2 py-1 border-gray-300 w-1/3 disabled:bg-gray-100 disabled:text-gray-500"
             placeholder="081234567890"
             value={contact}
             onChange={(e) => setContact(e.target.value)}
+            disabled={isLoading}
           />
         </div>
 
         <div className="flex flex-col mb-5">
           <p>Link Maps (Masukan link GoogleMaps Pariwisata ini):</p>
           <input
-            className="border px-2 py-1 border-gray-300 w-1/3"
+            className="border px-2 py-1 border-gray-300 w-1/3 disabled:bg-gray-100 disabled:text-gray-500"
             placeholder="https://xxxxxxxxxx"
             value={mapsLink}
             onChange={(e) => setMapsLink(e.target.value)}
+            disabled={isLoading}
           />
         </div>
 
@@ -202,11 +220,12 @@ export default function Page() {
                   value={day}
                   checked={selectedDays.includes(day)}
                   onChange={() => handleDayToggle(day)}
-                  className="w-4 h-4 cursor-pointer"
+                  className="w-4 h-4 cursor-pointer disabled:cursor-not-allowed"
+                  disabled={isLoading}
                 />
                 <label
                   htmlFor={`day-${day}`}
-                  className="cursor-pointer select-none"
+                  className={`cursor-pointer select-none ${isLoading ? "text-gray-400 cursor-not-allowed" : ""}`}
                 >
                   {day}
                 </label>
@@ -220,9 +239,10 @@ export default function Page() {
             <p>Jam Buka:</p>
             <div className="flex items-center gap-2">
               <select
-                className="border px-2 py-1 border-gray-300"
+                className="border px-2 py-1 border-gray-300 disabled:bg-gray-100 disabled:text-gray-500"
                 value={openHour}
                 onChange={(e) => setOpenHour(e.target.value)}
+                disabled={isLoading}
               >
                 {[...Array(24)].map((_, i) => {
                   const hour = String(i).padStart(2, "0");
@@ -235,9 +255,10 @@ export default function Page() {
               </select>
               <span>:</span>
               <select
-                className="border px-2 py-1 border-gray-300"
+                className="border px-2 py-1 border-gray-300 disabled:bg-gray-100 disabled:text-gray-500"
                 value={openMinute}
                 onChange={(e) => setOpenMinute(e.target.value)}
+                disabled={isLoading}
               >
                 {[...Array(60)].map((_, i) => {
                   const minute = String(i).padStart(2, "0");
@@ -257,9 +278,10 @@ export default function Page() {
             <p>Jam Tutup:</p>
             <div className="flex items-center gap-2">
               <select
-                className="border px-2 py-1 border-gray-300"
+                className="border px-2 py-1 border-gray-300 disabled:bg-gray-100 disabled:text-gray-500"
                 value={closeHour}
                 onChange={(e) => setCloseHour(e.target.value)}
+                disabled={isLoading}
               >
                 {[...Array(24)].map((_, i) => {
                   const hour = String(i).padStart(2, "0");
@@ -272,9 +294,10 @@ export default function Page() {
               </select>
               <span>:</span>
               <select
-                className="border px-2 py-1 border-gray-300"
+                className="border px-2 py-1 border-gray-300 disabled:bg-gray-100 disabled:text-gray-500"
                 value={closeMinute}
                 onChange={(e) => setCloseMinute(e.target.value)}
+                disabled={isLoading}
               >
                 {[...Array(60)].map((_, i) => {
                   const minute = String(i).padStart(2, "0");
@@ -311,15 +334,16 @@ export default function Page() {
                     }
                   }}
                   className="hidden"
+                  disabled={isLoading}
                 />
               </div>
 
               {!file[i] ? (
                 <div className="flex">
                   <div
-                    className="flex items-center justify-center text-sm text-slate-400
-              bg-slate-50 w-30 h-30 rounded-2xl border border-slate-200 cursor-pointer
-              mb-5 flex-col hover:bg-slate-100 transition"
+                    className={`flex items-center justify-center text-sm text-slate-400
+                      bg-slate-50 w-30 h-30 rounded-2xl border border-slate-200 
+                      mb-5 flex-col transition ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-slate-100"}`}
                     onClick={() => handleCustomClick(i)}
                   >
                     <LuImagePlus className="text-2xl mb-2" />
@@ -330,9 +354,9 @@ export default function Page() {
                 <img
                   src={URL.createObjectURL(file[i]!)}
                   onClick={() => handleCustomClick(i)}
-                  className="flex items-center justify-center text-sm text-slate-400
-            bg-slate-50 w-30 h-30 rounded-2xl border border-slate-200 cursor-pointer
-            mb-5 flex-col hover:bg-slate-100 transition"
+                  className={`flex items-center justify-center text-sm text-slate-400
+                    bg-slate-50 w-30 h-30 rounded-2xl border border-slate-200 
+                    mb-5 flex-col transition object-cover ${isLoading ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:bg-slate-100"}`}
                 />
               )}
             </div>
@@ -342,22 +366,33 @@ export default function Page() {
         <div className="flex gap-5 mb-5 flex-col md:flex-row">
           <p>Masukan deskripsi barang:</p>
           <textarea
-            className="border px-2 py-1 border-gray-300 w-full md:w-1/2"
+            className="border px-2 py-1 border-gray-300 w-full md:w-1/2 disabled:bg-gray-100 disabled:text-gray-500"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
+            disabled={isLoading}
           />
         </div>
 
         <div className="my-5 flex justify-end">
           <div
-            className="rounded-2xl text-sm px-4 py-2 bg-blue-50 text-blue-700
-            font-bold cursor-pointer hover:bg-blue-100 transition"
-            onClick={handleUpload}
+            className={`rounded-2xl text-sm px-4 py-2 font-bold transition flex items-center gap-2 ${
+              isLoading
+                ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                : "bg-blue-50 text-blue-700 cursor-pointer hover:bg-blue-100"
+            }`}
+            onClick={isLoading ? undefined : handleUpload}
           >
-            <div className="flex items-center gap-2">
-              <p>Upload Barang</p>
-              <IoSend />
-            </div>
+            {isLoading ? (
+              <>
+                <p>Sedang Mengupload...</p>
+                <AiOutlineLoading3Quarters className="animate-spin" />
+              </>
+            ) : (
+              <>
+                <p>Upload Barang</p>
+                <IoSend />
+              </>
+            )}
           </div>
         </div>
       </div>
