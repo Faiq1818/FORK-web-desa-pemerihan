@@ -6,8 +6,12 @@ export default function Page() {
   const router = useRouter();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleRegister = async () => {
+    if (isLoading) return;
+    setIsLoading(true);
+
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -24,13 +28,12 @@ export default function Page() {
         throw new Error("Request failed");
       }
 
-      const data = await res.json();
-
-      localStorage.setItem("auth", data.token);
       router.push("/admin/dashboard/article");
     } catch (err) {
       console.error(err);
-      alert("Error saat login");
+      alert("Error saat register");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -42,11 +45,12 @@ export default function Page() {
           <p>Buat akun baru</p>
           <p className="text-slate-700 mt-4">Username:</p>
           <input
-            className="border rounded-xl border-slate-400  px-2"
+            className="border rounded-xl border-slate-400 px-2"
             value={username}
             type="text"
             size={30}
             onChange={(e) => setUsername(e.target.value)}
+            disabled={isLoading}
           />
           <p className="text-slate-700">Password:</p>
           <input
@@ -55,15 +59,18 @@ export default function Page() {
             type="text"
             size={30}
             onChange={(e) => setPassword(e.target.value)}
+            disabled={isLoading}
           />
 
           <div className="justify-around mt-5">
             <div className="flex justify-center mt-2">
               <div
-                className="bg-slate-200 px-4 py-1 rounded-xl border border-slate-300 cursor-pointer hover:bg-slate-300"
-                onClick={() => handleRegister()}
+                className={`bg-slate-200 px-4 py-1 rounded-xl border border-slate-300 hover:bg-slate-300 ${
+                  isLoading ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
+                }`}
+                onClick={() => !isLoading && handleRegister()}
               >
-                Register
+                {isLoading ? "Loading..." : "Register"}
               </div>
             </div>
           </div>
