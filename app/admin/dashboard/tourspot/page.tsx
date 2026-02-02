@@ -127,14 +127,14 @@ function ShopDashboard() {
 
       <main className="flex-1 p-5 md:p-8 overflow-x-hidden">
         <div className="font-bold text-4xl text-[#333446] mb-6">
-          Lokasi Pariwisata
+          Lokasi Wisata
         </div>
 
         <div className="mb-6 flex">
           <Link prefetch={false} href="/admin/dashboard/tourspot/additem">
             <span className="flex items-center gap-2 rounded-2xl py-2 px-4 bg-[#F0F0F0] text-[#333446] font-bold cursor-pointer hover:bg-[#ACADAD] text-sm transition-colors">
               <IoIosAddCircleOutline className="text-xl" />
-              Tambah Lokasi Pariwisata
+              Tambah Lokasi Wisata
             </span>
           </Link>
         </div>

@@ -154,7 +154,7 @@ export default function Page() {
     <>
       <div className="m-10">
         <div className="flex flex-col mb-5">
-          <p>Nama Lokasi Pariwisata:</p>
+          <p>Nama Lokasi Wisata:</p>
           <input
             className="border px-2 py-1 border-gray-300 w-1/2 disabled:bg-gray-100 disabled:text-gray-500"
             value={name}
@@ -176,7 +176,7 @@ export default function Page() {
         </div>
 
         <div className="flex flex-col mb-5">
-          <p>Nama Kontak Pemilik/Pengurus Lokasi Pariwisata:</p>
+          <p>Nama Kontak Pemilik/Pengurus Lokasi Wisata:</p>
           <input
             className="border px-2 py-1 border-gray-300 w-1/3 disabled:bg-gray-100 disabled:text-gray-500"
             placeholder="Dani"

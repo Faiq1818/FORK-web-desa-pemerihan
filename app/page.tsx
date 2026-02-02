@@ -18,7 +18,7 @@ export default function HomePage() {
           <h1 className="text-4xl md:text-6xl font-bold mb-4 text-center">
             Selamat Datang di
             <br />
-            <span className="text-yellow-400">Pekon Pemerihan</span>
+            <span className="text-yellow-400">Desa Pemerihan</span>
           </h1>
           <p className="text-lg md:text-xl mb-8 text-center max-w-2xl">
             Kecamatan Bengkunat, Pesisir Barat, Lampung - Indonesia
@@ -32,7 +32,7 @@ export default function HomePage() {
           {/* Title with underline */}
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-800 mb-3">
-              Pekon Pemerihan
+              Desa Pemerihan
             </h2>
             <div className="w-24 h-1 bg-yellow-400 mx-auto"></div>
           </div>
@@ -40,30 +40,26 @@ export default function HomePage() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start mb-12">
             {/* Left Column - Text Content */}
             <div className="space-y-8">
-              {/* Visi Desa */}
+              {/* Penjelasan Desa */}
               <div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                  Visi Desa
-                </h3>
                 <p className="text-gray-600 leading-relaxed">
-                  Mewujudkan Desa Sejahtera sebagai desa yang mandiri,
-                  sejahtera, dan berkelanjutan dengan memanfaatkan potensi alam
-                  dan sumber daya manusia yang berkualitas untuk kesejahteraan
-                  bersama.
+                  Desa Pemerihan terletak di Kecamatan Bengkunat, Kabupaten
+                  Pesisir Barat, dan merupakan desa penyangga Taman Nasional
+                  Bukit Barisan Selatan (TNBBS) yang termasuk dalam Warisan
+                  Dunia UNESCO. Desa ini juga menjadi gerbang masuk Kabupaten
+                  Pesisir Barat, dengan akses sekitar 2 jam dari Krui dan 3 jam
+                  40 menit dari Bandar Lampung. Desa Pemerihan terdiri atas 7
+                  dusun dengan jumlah penduduk sekitar 7.721 jiwa dan luas
+                  wilayah ±1.515,89 hektare.
                 </p>
-              </div>
-
-              {/* Sejarah Singkat */}
-              <div>
-                <h3 className="text-2xl font-bold text-gray-800 mb-4">
-                  Sejarah Singkat
-                </h3>
+                <br />
                 <p className="text-gray-600 leading-relaxed">
-                  Desa Sejahtera didirikan pada tahun 1945 dan telah berkembang
-                  menjadi salah satu desa percontohan di wilayah Kabupaten
-                  Makmur. Dengan luas wilayah 1.250 hektar, desa ini dihuni oleh
-                  3.500 jiwa yang mayoritas bermata pencaharian sebagai petani
-                  dan pengrajin.
+                  Desa Pemerihan merupakan wilayah pesisir dengan topografi
+                  perbukitan dan panorama hutan TNBBS yang kaya keanekaragaman
+                  hayati. Potensi tersebut dikembangkan melalui pariwisata
+                  unggulan Elephant Camp, paket wisata minat khusus jungle
+                  tracking di zona pemanfaatan TNBBS, serta wisata edukasi Kebun
+                  Madu Sultan di Dusun Srimulyo II.
                 </p>
               </div>
             </div>
@@ -86,7 +82,7 @@ export default function HomePage() {
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
-            Video Profil Pekon Pemerihan
+            Video Profil Desa Pemerihan
           </h2>
           <div className="max-w-7xl mx-auto">
             <div className="rounded-2xl overflow-hidden shadow-xl">
@@ -115,11 +111,11 @@ export default function HomePage() {
       <section id="contact" className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl md:text-4xl font-bold text-center text-gray-800 mb-4">
-            Lokasi Pekon
+            Lokasi Desa
           </h2>
           <p className="text-center text-gray-600 mb-12">
             Temukan lokasi kami di peta untuk berkunjung dan berkenalan dengan
-            Pekon Pemerihan
+            Desa Pemerihan
           </p>
 
           <div className="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
@@ -138,7 +134,7 @@ export default function HomePage() {
             <div className="p-6 text-center bg-gradient-to-r from-green-600 to-green-700 text-white">
               <div className="flex items-center justify-center gap-2 mb-2">
                 <MapPin className="w-5 h-5" />
-                <h3 className="text-xl font-bold">Pekon Pemerihan</h3>
+                <h3 className="text-xl font-bold">Desa Pemerihan</h3>
               </div>
               <p className="text-green-100">
                 Kecamatan Bengkunat, Kabupaten Pesisir Barat, Provinsi Lampung

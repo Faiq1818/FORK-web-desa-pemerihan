@@ -87,7 +87,7 @@ export default function NewsSection() {
             Artikel
           </h2>
           <p className="text-center text-gray-600 mb-12">
-            Berita terkini dan kegiatan terbaru dari Pekon Pemerihan
+            Berita terkini dan kegiatan terbaru dari Desa Pemerihan
           </p>
 
           {isLoading ? (

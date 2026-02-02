@@ -66,25 +66,32 @@ export default function TentangPage() {
             </h2>
             <div className="space-y-4 text-gray-600 leading-relaxed font-['Inter']">
               <p>
-                Desa Pemerihan merupakan salah satu desa yang terletak di
-                Kecamatan Bengkunat, Kabupaten Pesisir Barat. Dikenal dengan
-                kekayaan alamnya yang melimpah, desa ini tumbuh berdampingan
-                dengan hutan tropis yang asri dan menjadi rumah bagi berbagai
-                flora dan fauna khas Lampung.
+                Desa atau yang kerap disebut Pekon Pemerihan bermula dari wilayah Cawang Ara yang
+                mulai dibuka pada tahun 1960 oleh tujuh orang perintis, yaitu
+                Ahmad Sofian, Tanrejo, Joremi, Faderi, Kamdani, Istanto, dan
+                Yamin. Seiring bertambahnya pendatang pada tahun 1970, kawasan
+                ini berkembang menjadi wilayah permukiman dan perkebunan. Pada
+                tahun 1975, berdasarkan sosialisasi Petugas Pelestarian Alam
+                (PPA), Cawang Ara ditetapkan sebagai bagian dari Kawasan Suaka
+                Margasatwa Bukit Barisan Selatan (SMBBS).
               </p>
               <p>
-                Nama Pemerihan sendiri berasal dari kata yang memiliki makna
-                historis bagi masyarakat setempat. Desa ini berdiri sejak
-                puluhan tahun yang lalu dengan komitmen kuat untuk menjaga
-                kelestarian alam sambil terus berkembang. Tradisi masyarakat
-                dalam mengelola hutan Damar dan peternakan madu Apikalis menjadi
-                ciri khas yang membedakan desa ini dengan wilayah lainnya.
+                Pada periode 1984 hingga 2010, Cawang Ara berstatus sebagai
+                dusun di bawah Pekon Sukamarga, Kecamatan Bangkunat, Kabupaten
+                Lampung Barat. Pembangunan infrastruktur mulai dilakukan, antara
+                lain pembangunan Sekolah Dasar pada tahun 1985 serta peningkatan
+                jalan Sanggi–Bengkunat sejak tahun 1990 hingga akhirnya diaspal
+                pada tahun 2007. Pembangunan tersebut menjadi dasar bagi
+                pertumbuhan permukiman dan tata pemerintahan pekon.
               </p>
               <p>
-                Dengan kebersamaan dan gotong royong yang tinggi, Desa Pemerihan
-                terus melangkah maju untuk mewujudkan desa yang mandiri,
-                sejahtera, dan berkelanjutan berbasis potensi alam dan kearifan
-                lokal yang telah diwariskan turun-temurun.
+                Pada tahun 2010, Pekon Pemerihan resmi berdiri sebagai pekon
+                definitif. Selanjutnya, pada tahun 2012, terbentuk Kabupaten
+                Pesisir Barat sehingga Pekon Pemerihan menjadi bagian dari
+                kabupaten baru tersebut. Dalam perkembangannya, masyarakat
+                mengalami perubahan komoditas pertanian dari kopi, lada, dan
+                kakao ke tanaman jagung dan pepaya akibat serangan hama dan
+                penyakit yang sulit dikendalikan.
               </p>
             </div>
           </div>
@@ -114,16 +121,11 @@ export default function TentangPage() {
                 </h3>
               </div>
               <p className="text-gray-700 text-lg leading-relaxed font-['Inter']">
-                Terwujudnya Desa Pemerihan sebagai desa yang{" "}
-                <span className="font-bold text-[#2D5A27]">mandiri</span> dalam
-                pengelolaan sumber daya,{" "}
-                <span className="font-bold text-[#2D5A27]">sejahtera</span>{" "}
-                dalam perekonomian masyarakat, dan{" "}
-                <span className="font-bold text-[#2D5A27]">berkelanjutan</span>{" "}
-                dalam menjaga kelestarian lingkungan dengan mengoptimalkan
-                potensi alam yang melimpah serta melestarikan kearifan lokal
-                yang telah diwariskan secara turun-temurun untuk kesejahteraan
-                generasi mendatang.
+                Pekon Pemerihan menjadi desa yang mandiri, sejahtera, dan
+                berdaya saing melalui pengembangan ekowisata berbasis masyarakat
+                yang berkelanjutan, dengan mengoptimalkan potensi alam, budaya,
+                dan kearifan lokal secara lestari, sekaligus mendukung upaya
+                konservasi lingkungan dan peningkatan kualitas hidup masyarakat.
               </p>
             </div>
 
@@ -140,26 +142,30 @@ export default function TentangPage() {
               <ul className="space-y-3 text-gray-700 font-['Inter']">
                 <li className="flex gap-3">
                   <span className="text-[#2D5A27] font-bold">•</span>
-                  <span>Meningkatkan kewenangan desa berbasis masyarakat</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-[#2D5A27] font-bold">•</span>
-                  <span>Melaksanakan inovasi dan kewirausahaan lokal</span>
-                </li>
-                <li className="flex gap-3">
-                  <span className="text-[#2D5A27] font-bold">•</span>
                   <span>
-                    Membangun kesadaran ekologi dan kelestarian lingkungan
+                    Pemberdayaan masyarakat dengan tujuan untuk meningkatkan
+                    produktivitas dan keanekaragaman usaha yang ada.
                   </span>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-[#2D5A27] font-bold">•</span>
-                  <span>Mengembangkan UMKM lokal berbasis potensi desa</span>
+                  <span>
+                    Terpenuhinya sarana dan fasilitas untuk mendukung
+                    peningkatan ekonomi desa.
+                  </span>
                 </li>
                 <li className="flex gap-3">
                   <span className="text-[#2D5A27] font-bold">•</span>
                   <span>
-                    Meningkatkan kualitas hidup dan kesejahteraan masyarakat
+                    Membangun dan memperkuat institusi yang mendukung rantai
+                    produksi dan pemasaran.
+                  </span>
+                </li>
+                <li className="flex gap-3">
+                  <span className="text-[#2D5A27] font-bold">•</span>
+                  <span>
+                    Mengoptimalkan sumber daya manusia sebagai dasar pertumbuhan
+                    ekonomi desa.
                   </span>
                 </li>
               </ul>
@@ -178,7 +184,7 @@ export default function TentangPage() {
                 <Users className="w-10 h-10" />
               </div>
               <div className="text-5xl font-bold mb-2 font-['Montserrat']">
-                2,847
+                7.721
               </div>
               <div className="text-green-100 text-lg font-['Inter']">
                 Jumlah Penduduk
@@ -191,7 +197,7 @@ export default function TentangPage() {
                 <MapPin className="w-10 h-10" />
               </div>
               <div className="text-5xl font-bold mb-2 font-['Montserrat']">
-                15.2
+                15.16
               </div>
               <div className="text-green-100 text-lg font-['Inter']">
                 Luas Wilayah (km²)
@@ -204,7 +210,7 @@ export default function TentangPage() {
                 <Camera className="w-10 h-10" />
               </div>
               <div className="text-5xl font-bold mb-2 font-['Montserrat']">
-                8
+                4
               </div>
               <div className="text-green-100 text-lg font-['Inter']">
                 Destinasi Wisata

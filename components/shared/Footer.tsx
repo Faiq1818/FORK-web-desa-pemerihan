@@ -15,7 +15,7 @@ export default function Footer() {
               </div>
               <div>
                 <h3 className="font-bold text-xl tracking-wide">
-                  Pekon Pemerihan
+                  Desa Pemerihan
                 </h3>
                 <p className="text-amber-200 text-xs uppercase tracking-wider">
                   Kabupaten Pesisir Barat
@@ -24,7 +24,7 @@ export default function Footer() {
             </div>
             <div className="text-sm text-amber-50/70 space-y-1">
               <p>
-                Pekon Pemerihan, Kecamatan Bengkunat, Kabupaten Pesisir Barat,
+                Desa Pemerihan, Kecamatan Bengkunat, Kabupaten Pesisir Barat,
                 Provinsi Lampung, Indonesia
               </p>
             </div>
@@ -72,7 +72,7 @@ export default function Footer() {
                   href="/location"
                   className="hover:text-white hover:translate-x-1 transition-all inline-block"
                 >
-                  Lokasi
+                  Wisata
                 </Link>
               </li>
             </ul>
@@ -82,10 +82,10 @@ export default function Footer() {
         <div className="border-t border-amber-900/50 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <div>
             <p className="text-amber-50/60 text-xs text-center md:text-left">
-              © 2025 Pemerintah Pekon Pemerihan. All rights reserved.
+              © 2025 Pemerintah Desa Pemerihan. All rights reserved.
             </p>
             <p className="text-amber-50/60 text-xs text-center md:text-left">
-              Pekon Pemerintah | KKN Tematik 16 ITERA Genap 2025/2026.
+              Desa Pemerintah | KKN Tematik 16 ITERA Genap 2025/2026.
             </p>
           </div>
 

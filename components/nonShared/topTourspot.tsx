@@ -66,7 +66,7 @@ export default function TopTourspot() {
           Lokasi Wisata
         </h2>
         <p className="text-center text-gray-600 mb-12">
-          Tempat Wisata Terbaik Pekon Pemerihan
+          Tempat Wisata Terbaik Desa Pemerihan
         </p>
 
         {isLoading ? (

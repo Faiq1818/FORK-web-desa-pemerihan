@@ -64,8 +64,8 @@ export default function TopProducts() {
             Produk Khas dan UMKM
           </h2>
           <p className="text-gray-600 max-w-xl mx-auto">
-            Produk terbaik hasil karya masyarakat Pekon Pemerihan dengan
-            kualitas dan nilai lokal
+            Produk terbaik hasil karya masyarakat Desa Pemerihan dengan kualitas
+            dan nilai lokal
           </p>
         </div>
 

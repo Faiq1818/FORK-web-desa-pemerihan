@@ -14,8 +14,8 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "Pekon Pemerihan - Official Website",
-  description: "Portal resmi Pekon Pemerihan Kabupaten Pesisir Barat",
+  title: "Desa Pemerihan - Official Website",
+  description: "Portal resmi Desa Pemerihan Kabupaten Pesisir Barat",
 };
 
 export default function RootLayout({
