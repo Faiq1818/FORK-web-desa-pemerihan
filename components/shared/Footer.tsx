@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Footer() {
   return (
@@ -10,9 +11,12 @@ export default function Footer() {
         <div className="flex flex-col md:flex-row justify-between items-start gap-10 mb-10">
           <div className="max-w-sm">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 bg-yellow-400 rounded-full flex items-center justify-center text-lg shadow-lg">
-                🌾
-              </div>
+              <Image
+                width={25}
+                height={25}
+                src={"/Lambang_Kabupaten_Pesisir_Barat.svg"}
+                alt="Logo"
+              />
               <div>
                 <h3 className="font-bold text-xl tracking-wide">
                   Desa Pemerihan

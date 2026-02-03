@@ -10,7 +10,7 @@ const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
 
 export default function Page() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [names, setNames] = useState("");
   const [price, setPrice] = useState(0);
   const [contact, setContact] = useState("");
   const [owner, setOwner] = useState("");
@@ -46,7 +46,7 @@ export default function Page() {
       if (selectedDays.length === 0) {
         alert("Pilih minimal satu hari operasional!");
         // [TAMBAH] Throw error agar tertangkap di handleUpload untuk stop loading
-        throw new Error("Hari operasional kosong");
+        return;
       }
 
       const finalOpenDays = days.filter((day) => selectedDays.includes(day));
@@ -63,7 +63,7 @@ export default function Page() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name: name,
+          name: names,
           entryFee: price,
           contact: contact,
           owner: owner,
@@ -94,6 +94,33 @@ export default function Page() {
 
     if (validFiles.length === 0) {
       alert("Pilih minimal satu gambar!");
+      return;
+    }
+
+    // validasi size file di frontend
+    const MAX_SIZE_MB = 5;
+    const MAX_SIZE_BYTES = MAX_SIZE_MB * 1024 * 1024; // 5.242.880 bytes
+
+    const isFileTooLarge = validFiles.some((f) => f.size > MAX_SIZE_BYTES);
+
+    if (isFileTooLarge) {
+      alert(
+        `Salah satu file melebihi ${MAX_SIZE_MB} MB. Harap kompres atau pilih gambar lain.`,
+      );
+      return;
+    }
+
+    // validasi
+    if (names.length < 1) {
+      alert(`Nama minimal 1 huruf!`);
+      return;
+    }
+    if (contact.length < 10) {
+      alert(`Nomor whatsapp minimal 10 angka!`);
+      return;
+    }
+    if (contact.length > 12) {
+      alert(`Nomor whatsapp maksimal 12 angka!`);
       return;
     }
 
@@ -157,9 +184,9 @@ export default function Page() {
           <p>Nama Lokasi Wisata:</p>
           <input
             className="border px-2 py-1 border-gray-300 w-1/2 disabled:bg-gray-100 disabled:text-gray-500"
-            value={name}
+            value={names}
             placeholder="Melloi"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => setNames(e.target.value)}
             disabled={isLoading}
           />
         </div>

@@ -25,7 +25,6 @@ export default async function Page({ params }: Props) {
   const { slug } = await params;
   const [article, imageUrl] = await getArticleData(slug);
 
-  // Error Handling UI (bukan JSON response)
   if (!article) {
     return (
       <div className="flex h-[50vh] w-full items-center justify-center">
@@ -39,6 +38,13 @@ export default async function Page({ params }: Props) {
     );
   }
 
+  // Fungsi utilitas sederhana untuk membersihkan &nbsp; menjadi spasi biasa
+  const cleanContent = (htmlContent: string) => {
+    if (!htmlContent) return "";
+    // Regex global (/g) untuk mengganti semua instance &nbsp; dengan spasi biasa
+    return htmlContent.replace(/&nbsp;/g, " ");
+  };
+
   return (
     <main className="min-h-screen bg-white">
       <article className="mx-auto max-w-3xl px-4 py-12 sm:px-6 sm:py-16">
@@ -46,7 +52,9 @@ export default async function Page({ params }: Props) {
         <header className="mb-10 text-center">
           <div
             className="text-3xl font-extrabold tracking-tight text-gray-900 sm:text-4xl md:text-5xl leading-tight mb-6"
-            dangerouslySetInnerHTML={{ __html: article?.title ?? "" }}
+            dangerouslySetInnerHTML={{
+              __html: cleanContent(article?.title ?? ""),
+            }}
           />
         </header>
 
@@ -75,10 +83,12 @@ export default async function Page({ params }: Props) {
         {/* CONTENT BODY */}
         <div
           className="prose prose-lg max-w-none prose-neutral break-words whitespace-normal
-                     prose-headings:font-bold prose-headings:text-gray-900 
-                     prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
-                     prose-img:rounded-lg prose-img:shadow-md"
-          dangerouslySetInnerHTML={{ __html: article?.content ?? "" }}
+                      prose-headings:font-bold prose-headings:text-gray-900 
+                      prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
+                      prose-img:rounded-lg prose-img:shadow-md"
+          dangerouslySetInnerHTML={{
+            __html: cleanContent(article?.content ?? ""),
+          }}
         />
       </article>
     </main>
