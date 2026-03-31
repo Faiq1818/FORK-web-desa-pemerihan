@@ -154,34 +154,28 @@ export async function GET(req: Request) {
   }
   const { page, limit } = result.data;
 
-  const { articleList, dataCount } = await getArticleList(page, limit);
-
-  const totalPages = Math.ceil(dataCount / limit);
-
-  if (page > totalPages && dataCount > 0) {
+  const articleList = await getArticleList(page, limit);
+  if (!articleList.success) {
     return Response.json(
       {
-        error: "Halaman tidak ditemukan",
-        message: `Hanya tersedia ${totalPages} halaman.`,
-        meta: {
-          page,
-          totalPages,
-        },
+        error: articleList.error,
+        message: articleList.message,
+        meta: articleList.meta,
       },
-      { status: 404 },
+      { status: articleList.status }
     );
   }
 
   return Response.json({
     success: true,
-    data: articleList,
+    data: articleList.articleList,
     meta: {
       page,
       limit,
-      totalItems: dataCount,
-      totalPages,
-      hasNextPage: page < totalPages, // untuk mempermudah frontend nanti
-      hasPrevPage: page > 1, // misal ada tombol next/pref page gitu bisa pakai boolean dari sini
+      totalItems: articleList.dataCount,
+      totalPages: articleList.totalPages,
+      hasNextPage: page < articleList.totalPages,
+      hasPrevPage: page > 1,
     },
   });
 }
