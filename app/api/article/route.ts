@@ -6,6 +6,7 @@ import { validateBody } from "@/helpers/requestHelper";
 import { validateJwtAuthHelper } from "@/helpers/authHelper";
 import { generateSlug } from "@/helpers/generateSlugHelper";
 import { deleteImgInBucket } from "@/libs/awsS3Action";
+import { getArticleList } from "@/services/articleServices";
 
 const Article = z.object({
   title: z.string().min(5),
@@ -137,13 +138,13 @@ export async function GET(req: Request) {
     );
   }
 
-  let articleList;
-  let dataCount = 0;
   const { searchParams } = new URL(req.url);
+
   const queryParams = {
     page: searchParams.get("page"),
     limit: searchParams.get("limit"),
   };
+
   const result = listPagingSchema.safeParse(queryParams);
   if (!result.success) {
     return Response.json(
@@ -152,30 +153,8 @@ export async function GET(req: Request) {
     );
   }
   const { page, limit } = result.data;
-  const skip = (page - 1) * limit;
 
-  try {
-    [articleList, dataCount] = await prisma.$transaction([
-      prisma.article.findMany({
-        skip: skip,
-        take: limit,
-        orderBy: {
-          createdAt: "desc",
-        },
-      }),
-      prisma.article.count(),
-    ]);
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        default:
-          return Response.json(
-            { error: "Database error", err, code: err.code },
-            { status: 500 },
-          );
-      }
-    }
-  }
+  const { articleList, dataCount } = await getArticleList(page, limit);
 
   const totalPages = Math.ceil(dataCount / limit);
 
