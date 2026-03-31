@@ -1,5 +1,5 @@
-import prisma from "@/libs/prisma";
-import { Article, Prisma } from "@/generated/prisma/client";
+import { Article } from "@/generated/prisma/client";
+import { countArticle, findArticleList } from "@/repository/articleRepository";
 
 type getArticleListResult =
   | {
@@ -26,20 +26,10 @@ export async function getArticleList(
   let dataCount = 0;
 
   try {
-    [articleList, dataCount] = await prisma.$transaction([
-      prisma.article.findMany({
-        skip: skip,
-        take: limit,
-        orderBy: {
-          createdAt: "desc",
-        },
-      }),
-      prisma.article.count(),
-    ]);
+    articleList = await findArticleList(skip, limit);
+    dataCount = await countArticle();
   } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      throw err;
-    }
+    throw err;
   }
 
   const totalPages = Math.ceil(dataCount / limit);
