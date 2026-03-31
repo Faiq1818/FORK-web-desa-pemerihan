@@ -162,20 +162,22 @@ export async function GET(req: Request) {
         message: articleList.message,
         meta: articleList.meta,
       },
-      { status: articleList.status }
+      { status: articleList.status },
     );
   }
 
-  return Response.json({
-    success: true,
-    data: articleList.articleList,
-    meta: {
-      page,
-      limit,
-      totalItems: articleList.dataCount,
-      totalPages: articleList.totalPages,
-      hasNextPage: page < articleList.totalPages,
-      hasPrevPage: page > 1,
+  return Response.json(
+    {
+      data: articleList.articleList,
+      meta: {
+        page,
+        limit,
+        totalItems: articleList.dataCount,
+        totalPages: articleList.totalPages,
+        hasNextPage: page < articleList.totalPages,
+        hasPrevPage: page > 1,
+      },
     },
-  });
+    { status: 200 },
+  );
 }

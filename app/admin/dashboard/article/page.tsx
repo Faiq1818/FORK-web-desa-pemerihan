@@ -62,10 +62,10 @@ function ArticleDashboard() {
       const data = await res.json();
 
       // if success != true, fallback user to login page
-      if (!data.success) {
-        router.push("/auth/login");
-        return;
-      }
+      // if (!data.success) {
+      //   router.push("/auth/login");
+      //   return;
+      // }
 
       // error handling
       if (!res.ok) {

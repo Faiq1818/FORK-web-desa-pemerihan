@@ -2,8 +2,19 @@ import prisma from "@/libs/prisma";
 import { Article, Prisma } from "@/generated/prisma/client";
 
 type getArticleListResult =
-  | { success: true; articleList: Article[]; dataCount: number; totalPages: number }
-  | { success: false; error: string; message: string; meta: { page: number; totalPages: number }; status: number };
+  | {
+      success: true;
+      articleList: Article[];
+      dataCount: number;
+      totalPages: number;
+    }
+  | {
+      success: false;
+      error: string;
+      message: string;
+      meta: { page: number; totalPages: number };
+      status: number;
+    };
 
 export async function getArticleList(
   page: number,
@@ -39,10 +50,14 @@ export async function getArticleList(
       error: "Page not found",
       message: `Only ${totalPages} page available.`,
       meta: { page, totalPages },
-      status: 404
+      status: 404,
     };
   }
 
-
-  return { success: true, articleList, dataCount, totalPages };
+  return {
+    success: true,
+    articleList,
+    dataCount,
+    totalPages,
+  };
 }
