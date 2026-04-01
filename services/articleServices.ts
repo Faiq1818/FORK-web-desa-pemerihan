@@ -1,5 +1,10 @@
 import { Article } from "@/generated/prisma/client";
-import { countArticle, findArticleList } from "@/repository/articleRepository";
+import {
+  countArticle,
+  findArticleList,
+  findUniqueSlug,
+  pushArticle,
+} from "@/repository/articleRepository";
 import prisma from "@/libs/prisma";
 import { Prisma } from "@/generated/prisma/client";
 import { generateSlug } from "@/helpers/generateSlugHelper";
@@ -94,11 +99,7 @@ export async function saveArticle(
   const finalSlug = generateSlug(title);
 
   // check if slug is already exist and throw error
-  const checkSlugExist = await prisma.article.findUnique({
-    where: {
-      slug: finalSlug,
-    },
-  });
+  const checkSlugExist = await findUniqueSlug(finalSlug);
   if (checkSlugExist) {
     return {
       success: false,
@@ -110,15 +111,13 @@ export async function saveArticle(
 
   // push new article to db
   try {
-    await prisma.article.create({
-      data: {
-        title: title,
-        slug: finalSlug,
-        content: content,
-        featuredImageUrl: featuredImageUrl,
-        shortDescription: shortDescription,
-      },
-    });
+    await pushArticle(
+      title,
+      finalSlug,
+      content,
+      featuredImageUrl,
+      shortDescription,
+    );
   } catch (err) {
     if (err instanceof Prisma.PrismaClientKnownRequestError) {
       switch (err.code) {

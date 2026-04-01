@@ -60,6 +60,7 @@ export async function POST(req: Request) {
     // get the payload from jwt
     const payload = decodedJwt.data as MyJwtPayload;
 
+    // Bussiness logic
     try {
       const save = await saveArticle(
         payload.data.userId,
