@@ -1,85 +1,64 @@
-import prisma from "@/libs/prisma";
-import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
+import { getArticleList } from "@/services/articleServices";
 
 const listPagingSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(10),
 });
 
-/////////
-// GET //
-/////////
 export async function GET(req: Request) {
-  // validate the jwt token
-  let articleList;
-  let dataCount = 0;
-  const { searchParams } = new URL(req.url);
-  const queryParams = {
-    page: searchParams.get("page"),
-    limit: searchParams.get("limit"),
-  };
-  const result = listPagingSchema.safeParse(queryParams);
-  if (!result.success) {
-    return Response.json(
-      { error: z.treeifyError(result.error) },
-      { status: 422 },
-    );
-  }
-  const { page, limit } = result.data;
-  const skip = (page - 1) * limit;
-
   try {
-    [articleList, dataCount] = await prisma.$transaction([
-      prisma.article.findMany({
-        skip: skip,
-        take: limit,
-        orderBy: {
-          createdAt: "desc",
-        },
-      }),
-      prisma.article.count(),
-    ]);
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        default:
-          return Response.json(
-            { error: "Database error", err, code: err.code },
-            { status: 500 },
-          );
-      }
+    const { searchParams } = new URL(req.url);
+
+    const queryParams = {
+      page: searchParams.get("page"),
+      limit: searchParams.get("limit"),
+    };
+
+    const result = listPagingSchema.safeParse(queryParams);
+    if (!result.success) {
+      return Response.json(
+        { error: z.treeifyError(result.error) },
+        { status: 422 },
+      );
     }
-  }
+    const { page, limit } = result.data;
 
-  const totalPages = Math.ceil(dataCount / limit);
+    const articleList = await getArticleList(page, limit);
+    if (!articleList.success) {
+      return Response.json(
+        {
+          error: articleList.error,
+          message: articleList.message,
+          meta: articleList.meta,
+        },
+        { status: articleList.status },
+      );
+    }
 
-  if (page > totalPages && dataCount > 0) {
     return Response.json(
       {
-        error: "Halaman tidak ditemukan",
-        message: `Hanya tersedia ${totalPages} halaman.`,
+        success: true,
+        data: articleList.articleList,
         meta: {
           page,
-          totalPages,
+          limit,
+          totalItems: articleList.dataCount,
+          totalPages: articleList.totalPages,
+          hasNextPage: page < articleList.totalPages,
+          hasPrevPage: page > 1,
         },
       },
-      { status: 404 },
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error(err);
+    return Response.json(
+      {
+        error: "Internal Server Error",
+        message: "An unexpected error occurred while processing the request.",
+      },
+      { status: 500 },
     );
   }
-
-  const safeArticle = articleList?.map(({ id, ...rest }) => rest);
-
-  return Response.json({
-    success: true,
-    data: safeArticle,
-    meta: {
-      page,
-      limit,
-      totalItems: dataCount,
-      totalPages,
-      hasNextPage: page < totalPages, // untuk mempermudah frontend nanti
-      hasPrevPage: page > 1, // misal ada tombol next/pref page gitu bisa pakai boolean dari sini
-    },
-  });
 }

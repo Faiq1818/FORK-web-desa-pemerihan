@@ -1,10 +1,7 @@
-import bcrypt from "bcryptjs";
-import prisma from "@/libs/prisma";
-import { Prisma } from "@/generated/prisma/client";
 import * as z from "zod";
-import jwt from "jsonwebtoken";
-import { AUTH_CONFIG } from "@/libs/config/JWTConfig";
 import { validateBody } from "@/helpers/requestHelper";
+import { login } from "@/services/authServices";
+import { ERROR_STATUS_CODE_MAPPER } from "@/helpers/httpErrorsHelper";
 
 const User = z.object({
   username: z.string().min(5),
@@ -12,67 +9,42 @@ const User = z.object({
 });
 
 export async function POST(req: Request) {
-  let userDb;
-
-  const result = await validateBody(req, User);
-  if (!result.success) {
-    return Response.json(
-      { error: result.error },
-      { status: result.error.status },
-    );
-  }
-
   try {
-    userDb = await prisma.user.findUnique({
-      where: {
-        name: result.data.username,
-      },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        default:
-          return Response.json(
-            { error: "Database nya error", code: err.code },
-            { status: 500 },
-          );
-      }
+    const result = await validateBody(req, User);
+    if (!result.success) {
+      return Response.json(
+        { error: result.error },
+        { status: result.error.status },
+      );
     }
-  }
 
-  if (!userDb || !userDb.password) {
+    // Bussiness logic
+    const loginResult = await login(result.data.username, result.data.password);
+    if (!loginResult.success) {
+      const errorStatus =
+        ERROR_STATUS_CODE_MAPPER[loginResult.error] ??
+        ERROR_STATUS_CODE_MAPPER.UNKNOWN_ERROR;
+      return Response.json(
+        { message: loginResult.message },
+        { status: errorStatus.statusCode },
+      );
+    }
+
     return Response.json(
-      { error: "Username atau Password salah" },
-      { status: 401 },
-    );
-  }
-
-  const pwMatches = await bcrypt.compare(result.data.password, userDb.password);
-  if (!pwMatches) {
-    return Response.json(
-      { error: "Username atau Password salah" },
-      { status: 401 },
-    );
-  }
-
-  const token = jwt.sign(
-    {
-      exp:
-        Math.floor(Date.now() / AUTH_CONFIG.JWT_EXP_DIVIDER) +
-        AUTH_CONFIG.JWT_EXP_TIME,
-      data: {
-        userId: userDb.id,
-        username: userDb.name,
+      {
+        message: "Login berhasil",
+        token: loginResult.token,
       },
-    },
-    AUTH_CONFIG.JWT_SECRET,
-  );
-
-  return Response.json(
-    {
-      message: "Login berhasil",
-      token: token,
-    },
-    { status: 200 },
-  );
+      { status: 200 },
+    );
+  } catch (err) {
+    console.error(err);
+    return Response.json(
+      {
+        error: "Internal Server Error",
+        message: "An unexpected error occurred while processing the request.",
+      },
+      { status: 500 },
+    );
+  }
 }
