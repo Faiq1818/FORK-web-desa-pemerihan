@@ -24,9 +24,6 @@ interface MyJwtPayload extends JwtPayload {
   };
 }
 
-//////////
-// POST //
-//////////
 export async function POST(req: Request) {
   try {
     // validate body
@@ -105,9 +102,6 @@ export async function POST(req: Request) {
   }
 }
 
-/////////
-// GET //
-/////////
 export async function GET(req: Request) {
   try {
     // validate the jwt token
@@ -137,6 +131,7 @@ export async function GET(req: Request) {
     }
     const { page, limit } = result.data;
 
+    // Bussiness Logic
     const articleList = await getArticleList(page, limit);
     if (!articleList.success) {
       return Response.json(
