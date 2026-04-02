@@ -1,9 +1,7 @@
 import bcrypt from "bcryptjs";
-import prisma from "@/libs/prisma";
-import { Prisma } from "@/generated/prisma/client";
-import jwt from "jsonwebtoken";
-import { AUTH_CONFIG } from "@/libs/config/JWTConfig";
 import { ErrorStatus } from "@/helpers/httpErrorsHelper";
+import { findUniqueUserByName } from "@/repository/authRepository";
+import { JWTSign } from "@/helpers/jwtHelper";
 
 type loginResult =
   | {
@@ -20,55 +18,28 @@ export async function login(
   username: string,
   userPassword: string,
 ): Promise<loginResult> {
-  let userDb;
-  try {
-    userDb = await prisma.user.findUnique({
-      where: {
-        name: username,
-      },
-    });
-  } catch (err) {
-    if (err instanceof Prisma.PrismaClientKnownRequestError) {
-      switch (err.code) {
-        default:
-          return {
-            success: false,
-            error: "DATABASE_ERROR",
-            message: "Database nya error",
-          };
-      }
-    }
-  }
-
+  // checking if the user is in the db or not
+  const userDb = await findUniqueUserByName(username);
   if (!userDb || !userDb.password) {
     return {
       success: false,
       error: "USER_NOT_FOUND",
-      message: "Username tidak diketahui",
+      message: "Username not found",
     };
   }
 
+  // Comparing password from user request body to
+  // password stored in the db using bcrypt library
   const pwMatches = await bcrypt.compare(userPassword, userDb.password);
   if (!pwMatches) {
     return {
       success: false,
       error: "INVALID_PASSWORD",
-      message: "Password salah",
+      message: "Incorrect password",
     };
   }
 
-  const token = jwt.sign(
-    {
-      exp:
-        Math.floor(Date.now() / AUTH_CONFIG.JWT_EXP_DIVIDER) +
-        AUTH_CONFIG.JWT_EXP_TIME,
-      data: {
-        userId: userDb.id,
-        username: userDb.name,
-      },
-    },
-    AUTH_CONFIG.JWT_SECRET,
-  );
+  const token = JWTSign(userDb.id, userDb.name);
 
   return {
     success: true,

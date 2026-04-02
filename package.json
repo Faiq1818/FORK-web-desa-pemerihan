@@ -9,7 +9,7 @@
     "lint": "eslint",
     "studio": "prisma studio",
     "format": "prettier -w .",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "dependencies": {
     "lucide-react": "^0.562.0",
