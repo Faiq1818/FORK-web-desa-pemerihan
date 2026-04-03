@@ -7,9 +7,6 @@ const listPagingSchema = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(10),
 });
 
-/////////
-// GET //
-/////////
 export async function GET(req: Request) {
   try {
     const { searchParams } = new URL(req.url);

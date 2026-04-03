@@ -7,6 +7,7 @@ export type ErrorStatus =
   | "PAGE_NOT_FOUND"
   | "ARTICLE_NOT_FOUND"
   | "SHOP_ITEM_NOT_FOUND"
+  | "TOUR_SPOT_NOT_FOUND"
   | "ACCOUNT_NOT_FOUND"
   | "USERNAME_ALREADY_EXISTS"
   | "UNKNOWN_ERROR";
@@ -38,6 +39,9 @@ export const ERROR_STATUS_CODE_MAPPER: Record<ErrorStatus, HttpErrorConfig> = {
     statusCode: 404,
   },
   SHOP_ITEM_NOT_FOUND: {
+    statusCode: 404,
+  },
+  TOUR_SPOT_NOT_FOUND: {
     statusCode: 404,
   },
   ACCOUNT_NOT_FOUND: {
