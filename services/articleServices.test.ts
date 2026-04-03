@@ -62,10 +62,9 @@ describe("getArticleList Service", () => {
 
     expect(result).toEqual({
       success: false,
-      error: "Page not found",
+      error: "PAGE_NOT_FOUND",
       message: "Only 3 page available.",
       meta: { page: 4, totalPages: 3 },
-      status: 404,
     });
   });
 

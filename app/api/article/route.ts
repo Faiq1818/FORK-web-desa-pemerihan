@@ -129,7 +129,7 @@ export async function GET(req: Request) {
           message: articleList.message,
           meta: articleList.meta,
         },
-        { status: articleList.status },
+        { status: ERROR_STATUS_CODE_MAPPER[articleList.error].statusCode },
       );
     }
 

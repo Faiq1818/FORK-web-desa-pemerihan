@@ -6,6 +6,7 @@ import {
   pushArticle,
 } from "@/repository/articleRepository";
 import { generateSlug } from "@/helpers/generateSlugHelper";
+import { ErrorStatus } from "@/helpers/httpErrorsHelper";
 
 type getArticleListResult =
   | {
@@ -16,10 +17,9 @@ type getArticleListResult =
     }
   | {
       success: false;
-      error: string;
+      error: ErrorStatus;
       message: string;
       meta: { page: number; totalPages: number };
-      status: number;
     };
 
 export async function getArticleList(
@@ -43,10 +43,9 @@ export async function getArticleList(
   if (page > totalPages && dataCount > 0) {
     return {
       success: false,
-      error: "Page not found",
+      error: "PAGE_NOT_FOUND",
       message: `Only ${totalPages} page available.`,
       meta: { page, totalPages },
-      status: 404,
     };
   }
 

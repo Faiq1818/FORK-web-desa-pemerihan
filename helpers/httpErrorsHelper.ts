@@ -4,6 +4,7 @@ export type ErrorStatus =
   | "DATABASE_ERROR"
   | "VALIDATION_ERROR"
   | "SLUG_ALREADY_EXISTS"
+  | "PAGE_NOT_FOUND"
   | "UNKNOWN_ERROR";
 
 type HttpErrorConfig = {
@@ -25,6 +26,9 @@ export const ERROR_STATUS_CODE_MAPPER: Record<ErrorStatus, HttpErrorConfig> = {
   },
   SLUG_ALREADY_EXISTS: {
     statusCode: 409,
+  },
+  PAGE_NOT_FOUND: {
+    statusCode: 404,
   },
   UNKNOWN_ERROR: {
     statusCode: 500,
