@@ -1,12 +1,15 @@
 import { Article } from "@/generated/prisma/client";
 import {
   countArticle,
+  deleteArticleById,
+  findArticleById,
   findArticleList,
   findUniqueUser,
   pushArticle,
 } from "@/repository/articleRepository";
 import { generateSlug } from "@/helpers/generateSlugHelper";
 import { ErrorStatus } from "@/helpers/httpErrorsHelper";
+import { deleteImgInBucket } from "@/libs/awsS3Action";
 
 type getArticleListResult =
   | {
@@ -119,4 +122,32 @@ export async function saveArticle(
   return {
     success: true,
   };
+}
+
+type deleteArticleResult =
+  | { success: true; data: Article }
+  | { success: false; error: ErrorStatus; message: string };
+
+export async function deleteArticle(id: number): Promise<deleteArticleResult> {
+  const article = await findArticleById(id);
+  if (!article) {
+    return {
+      success: false,
+      error: "ARTICLE_NOT_FOUND",
+      message: "Artikel tidak ditemukan.",
+    };
+  }
+
+  await deleteImgInBucket([article.featuredImageUrl]);
+
+  const dbResult = await deleteArticleById(id);
+  if (!dbResult.success) {
+    return {
+      success: false,
+      error: "DATABASE_ERROR",
+      message: "An unexpected database error occurred.",
+    };
+  }
+
+  return { success: true, data: dbResult.data };
 }

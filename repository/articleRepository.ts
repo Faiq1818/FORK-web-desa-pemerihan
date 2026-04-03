@@ -21,6 +21,32 @@ export async function findUniqueUser(userId: number) {
   });
 }
 
+export async function findArticleById(id: number) {
+  return await prisma.article.findUnique({
+    where: { id },
+  });
+}
+
+export async function deleteArticleById(id: number) {
+  try {
+    const deleted = await prisma.article.delete({
+      where: { id },
+    });
+    return { success: true as const, data: deleted };
+  } catch (err) {
+    if (err instanceof Prisma.PrismaClientKnownRequestError) {
+      switch (err.code) {
+        case "P2025":
+          return { success: false as const, code: "NOT_FOUND" };
+        default:
+          return { success: false as const, code: "DATABASE_ERROR" };
+      }
+    }
+    console.error("deleteArticleById DB Error:", err);
+    return { success: false as const, code: "DB_UNKNOWN_ERROR" };
+  }
+}
+
 export async function pushArticle(
   title: string,
   slug: string,
