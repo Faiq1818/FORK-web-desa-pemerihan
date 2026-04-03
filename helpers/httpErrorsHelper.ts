@@ -6,6 +6,8 @@ export type ErrorStatus =
   | "SLUG_ALREADY_EXISTS"
   | "PAGE_NOT_FOUND"
   | "ARTICLE_NOT_FOUND"
+  | "ACCOUNT_NOT_FOUND"
+  | "USERNAME_ALREADY_EXISTS"
   | "UNKNOWN_ERROR";
 
 type HttpErrorConfig = {
@@ -33,6 +35,12 @@ export const ERROR_STATUS_CODE_MAPPER: Record<ErrorStatus, HttpErrorConfig> = {
   },
   ARTICLE_NOT_FOUND: {
     statusCode: 404,
+  },
+  ACCOUNT_NOT_FOUND: {
+    statusCode: 404,
+  },
+  USERNAME_ALREADY_EXISTS: {
+    statusCode: 409,
   },
   UNKNOWN_ERROR: {
     statusCode: 500,
