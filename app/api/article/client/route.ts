@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { getArticleList } from "@/services/articleServices";
+import { ERROR_STATUS_CODE_MAPPER } from "@/helpers/httpErrorsHelper";
 
 const listPagingSchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
@@ -24,6 +25,7 @@ export async function GET(req: Request) {
     }
     const { page, limit } = result.data;
 
+    // Bussiness Logic
     const articleList = await getArticleList(page, limit);
     if (!articleList.success) {
       return Response.json(
@@ -32,7 +34,7 @@ export async function GET(req: Request) {
           message: articleList.message,
           meta: articleList.meta,
         },
-        { status: articleList.status },
+        { status: ERROR_STATUS_CODE_MAPPER[articleList.error].statusCode },
       );
     }
 
